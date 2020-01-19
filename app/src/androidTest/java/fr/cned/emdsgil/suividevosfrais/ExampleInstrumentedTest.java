@@ -1,8 +1,9 @@
-package fr.bonaparte.gsb.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +20,8 @@ public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("fr.bonaparte.gsb.suividevosfrais", appContext.getPackageName());
+        assertEquals("fr.cned.emdsgil.suividevosfrais", appContext.getPackageName());
     }
 }
