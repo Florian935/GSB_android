@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -60,15 +61,15 @@ public class KmActivity extends AppCompatActivity {
 	 * Valorisation des propriétés avec les informations affichées
 	 */
 	private void valoriseProprietes() {
-		annee = ((DatePicker)findViewById(R.id.datKm)).getYear() ;
-		mois = ((DatePicker)findViewById(R.id.datKm)).getMonth() + 1 ;
+		annee = ((DatePicker)findViewById(R.id.datKm)).getYear();
+		mois = ((DatePicker)findViewById(R.id.datKm)).getMonth() + 1;
 		// récupération de la qte correspondant au mois actuel
-		qte = 0 ;
-		Integer key = annee*100+mois ;
+		qte = 0;
+		Integer key = annee*100+mois;
 		if (Global.listFraisMois.containsKey(key)) {
-			qte = Global.listFraisMois.get(key).getKm() ;
+			qte = Global.listFraisMois.get(key).getKm();
 		}
-		((EditText)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte)) ;
+		((TextView)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte));
 	}
 	
 	/**
@@ -100,7 +101,7 @@ public class KmActivity extends AppCompatActivity {
     private void cmdPlus_clic() {
     	findViewById(R.id.cmdKmPlus).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			qte+=10 ;
+    			qte+=10;
     			enregNewQte() ;
     		}
     	}) ;    	
@@ -122,11 +123,11 @@ public class KmActivity extends AppCompatActivity {
      * Sur le changement de date : mise à jour de l'affichage de la qte
      */
     private void dat_clic() {   	
-    	final DatePicker uneDate = (DatePicker) findViewById(R.id.datKm);
+    	final DatePicker uneDate = (DatePicker)findViewById(R.id.datKm);
     	uneDate.init(uneDate.getYear(), uneDate.getMonth(), uneDate.getDayOfMonth(), new OnDateChangedListener(){
 			@Override
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				valoriseProprietes() ;				
+				valoriseProprietes();
 			}
     	});       	
     }
@@ -136,14 +137,14 @@ public class KmActivity extends AppCompatActivity {
 	 */
 	private void enregNewQte() {
 		// enregistrement dans la zone de texte
-		((EditText)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte)) ;
+		((TextView)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte)) ;
 		// enregistrement dans la liste
 		Integer key = annee*100+mois ;
 		if (!Global.listFraisMois.containsKey(key)) {
 			// creation du mois et de l'annee s'ils n'existent pas déjà
 			Global.listFraisMois.put(key, new FraisMois(annee, mois)) ;
 		}
-		Global.listFraisMois.get(key).setKm(qte) ;		
+		Global.listFraisMois.get(key).setKm(qte);
 	}
 
 	/**
@@ -151,6 +152,7 @@ public class KmActivity extends AppCompatActivity {
 	 */
 	private void retourActivityPrincipale() {
 		Intent intent = new Intent(KmActivity.this, MainActivity.class);
-		startActivity(intent) ;   					
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
 	}
 }
