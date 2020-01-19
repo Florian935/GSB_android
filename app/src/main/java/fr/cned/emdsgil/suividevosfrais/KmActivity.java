@@ -2,6 +2,8 @@ package fr.cned.emdsgil.suividevosfrais;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.DatePicker.OnDateChangedListener;
@@ -51,7 +53,7 @@ public class KmActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getTitle().equals(getString(R.string.retour_accueil))) {
-            retourActivityPrincipale() ;
+            retourActivityPrincipale();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,9 +104,9 @@ public class KmActivity extends AppCompatActivity {
     	findViewById(R.id.cmdKmPlus).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			qte+=10;
-    			enregNewQte() ;
+    			enregNewQte();
     		}
-    	}) ;    	
+    	});
     }
     
     /**
@@ -129,7 +131,7 @@ public class KmActivity extends AppCompatActivity {
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				valoriseProprietes();
 			}
-    	});       	
+    	});
     }
 
 	/**

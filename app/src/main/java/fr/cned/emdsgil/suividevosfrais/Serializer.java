@@ -1,6 +1,7 @@
 package fr.cned.emdsgil.suividevosfrais;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,13 +23,13 @@ abstract class Serializer {
 	 */
 	public static void serialize(Object object, Context context) {
 		try {
-			FileOutputStream file = context.openFileOutput(Global.filename, Context.MODE_PRIVATE) ;
+			FileOutputStream file = context.openFileOutput(Global.filename, Context.MODE_PRIVATE);
 			ObjectOutputStream oos;
 			try {
 				oos = new ObjectOutputStream(file);
-				oos.writeObject(object) ;
-				oos.flush() ;
-				oos.close() ;
+				oos.writeObject(object);
+				oos.flush();
+				oos.close();
 			} catch (IOException e) {
 				// erreur de sérialisation
 				e.printStackTrace();
