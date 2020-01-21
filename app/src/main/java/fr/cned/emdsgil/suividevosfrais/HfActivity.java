@@ -62,8 +62,8 @@ public class HfActivity extends AppCompatActivity {
     	findViewById(R.id.cmdHfAjouter).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			enregListe() ;
-    			Serializer.serialize(Global.listFraisMois, HfActivity.this) ;
-    			retourActivityPrincipale() ;    		
+    			Serializer.serialize(Global.listFraisMois, HfActivity.this);
+    			retourActivityPrincipale();
     		}
     	}) ;    	
     }
@@ -91,7 +91,8 @@ public class HfActivity extends AppCompatActivity {
 	 * Retour à l'activité principale (le menu)
 	 */
 	private void retourActivityPrincipale() {
-		Intent intent = new Intent(HfActivity.this, MainActivity.class) ;
-		startActivity(intent) ;   					
+		Intent intent = new Intent(HfActivity.this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
 	}
 }
