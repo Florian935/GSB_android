@@ -22,12 +22,12 @@ public class HfRecapActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_hf_recap);
         setTitle("GSB : Récap Frais HF");
 		// modification de l'affichage du DatePicker
-		Global.changeAfficheDate((DatePicker) findViewById(R.id.datHfRecap), false) ;
+		Global.changeAfficheDate((DatePicker) findViewById(R.id.datHfRecap), false);
 		// valorisation des propriétés
-		afficheListe() ;
+		afficheListe();
         // chargement des méthodes événementielles
-		imgReturn_clic() ;
-		dat_clic() ;
+		imgReturn_clic();
+		dat_clic();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class HfRecapActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getTitle().equals(getString(R.string.retour_accueil))) {
-			retourActivityPrincipale() ;
+			retourActivityPrincipale();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -50,13 +50,13 @@ public class HfRecapActivity extends AppCompatActivity {
 	 * Affiche la liste des frais hors forfaits de la date sélectionnée
 	 */
 	private void afficheListe() {
-		Integer annee = ((DatePicker)findViewById(R.id.datHfRecap)).getYear() ;
-		Integer mois = ((DatePicker)findViewById(R.id.datHfRecap)).getMonth() + 1 ;
+		Integer annee = ((DatePicker)findViewById(R.id.datHfRecap)).getYear();
+		Integer mois = ((DatePicker)findViewById(R.id.datHfRecap)).getMonth() + 1;
 		// récupération des frais HF pour cette date
-		Integer key = annee*100 + mois ;
+		Integer key = annee*100 + mois;
 		ArrayList<FraisHf> liste;
 		if (Global.listFraisMois.containsKey(key)) {
-			liste = Global.listFraisMois.get(key).getLesFraisHf() ;
+			liste = Global.listFraisMois.get(key).getLesFraisHf();
 		}else{
 			liste = new ArrayList<>() ;
 			/* Retrait du type de l'ArrayList (Optimisation Android Studio)
@@ -65,9 +65,9 @@ public class HfRecapActivity extends AppCompatActivity {
 			*/
 			// insertion dans la listview
 		}
-		ListView listView = (ListView) findViewById(R.id.lstHfRecap);
-		FraisHfAdapter adapter = new FraisHfAdapter(HfRecapActivity.this, liste) ;
-		listView.setAdapter(adapter) ;
+		ListView listView = (ListView)findViewById(R.id.lstHfRecap);
+		FraisHfAdapter adapter = new FraisHfAdapter(HfRecapActivity.this, liste, key);
+		listView.setAdapter(adapter);
 	}
 	
 	/**
@@ -100,7 +100,8 @@ public class HfRecapActivity extends AppCompatActivity {
 	 * Retour à l'activité principale (le menu)
 	 */
 	private void retourActivityPrincipale() {
-		Intent intent = new Intent(HfRecapActivity.this, MainActivity.class) ;
-		startActivity(intent) ;   					
+		Intent intent = new Intent(HfRecapActivity.this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
 	}
 }

@@ -8,11 +8,11 @@ import java.io.Serializable;
  */
 class FraisHf  implements Serializable {
 
-	private final Float montant ;
-	private final String motif ;
-	private final Integer jour ;
+	private final Float montant;
+	private final String motif;
+	private final int jour;
 	
-	public FraisHf(Float montant, String motif, Integer jour) {
+	public FraisHf(Float montant, String motif, int jour) {
 		this.montant = montant ;
 		this.motif = motif ;
 		this.jour = jour ;

@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // ouvre l'activité
                 Intent intent = new Intent(MainActivity.this, classe);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });

@@ -1,10 +1,13 @@
 package fr.cned.emdsgil.suividevosfrais;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -12,17 +15,19 @@ import java.util.Locale;
 
 class FraisHfAdapter extends BaseAdapter {
 
-	private final ArrayList<FraisHf> lesFrais ; // liste des frais du mois
-	private final LayoutInflater inflater ;
+	private final ArrayList<FraisHf> lesFrais; // liste des frais du mois
+	private final LayoutInflater inflater;
+	private Integer key;
 
     /**
 	 * Constructeur de l'adapter pour valoriser les propriétés
      * @param context Accès au contexte de l'application
      * @param lesFrais Liste des frais hors forfait
      */
-	public FraisHfAdapter(Context context, ArrayList<FraisHf> lesFrais) {
-		inflater = LayoutInflater.from(context) ;
-		this.lesFrais = lesFrais ;
+	public FraisHfAdapter(Context context, ArrayList<FraisHf> lesFrais, Integer key) {
+		inflater = LayoutInflater.from(context);
+		this.lesFrais = lesFrais;
+		this.key = key;
     }
 	
 	/**
@@ -48,36 +53,50 @@ class FraisHfAdapter extends BaseAdapter {
 	public long getItemId(int index) {
 		return index;
 	}
-
-	/**
-	 * structure contenant les éléments d'une ligne
-	 */
-	private class ViewHolder {
-		TextView txtListJour ;
-		TextView txtListMontant ;
-		TextView txtListMotif ;
-	}
 	
 	/**
 	 * Affichage dans la liste
 	 */
 	@Override
 	public View getView(int index, View convertView, ViewGroup parent) {
-		ViewHolder holder ;
+		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder() ;
-			convertView = inflater.inflate(R.layout.layout_liste, parent, false) ;
+			convertView = inflater.inflate(R.layout.layout_liste, parent, false);
 			holder.txtListJour = convertView.findViewById(R.id.txtListJour);
 			holder.txtListMontant = convertView.findViewById(R.id.txtListMontant);
 			holder.txtListMotif = convertView.findViewById(R.id.txtListMotif);
-			convertView.setTag(holder) ;
+			holder.cmdSuppHf = convertView.findViewById(R.id.cmdSuppHf);
+			convertView.setTag(holder);
 		}else{
 			holder = (ViewHolder)convertView.getTag();
 		}
 		holder.txtListJour.setText(String.format(Locale.FRANCE, "%d", lesFrais.get(index).getJour()));
-		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFrais.get(index).getMontant())) ;
-		holder.txtListMotif.setText(lesFrais.get(index).getMotif()) ;
-		return convertView ;
+		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFrais.get(index).getMontant()));
+		holder.txtListMotif.setText(lesFrais.get(index).getMotif());
+		holder.cmdSuppHf.setTag(index);
+		// gestion de l'événement clic sur le bouton de suppression
+		holder.cmdSuppHf.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				int indice = (int)v.getTag();
+				// TODO: suppression dans la BDD distante
+				// Suppression du frais HF sur lequel on clic
+				Global.listFraisMois.get(key).supprFraisHf(indice);
+				// Rafraichi la liste visuelle
+				notifyDataSetChanged();
+			}
+		});
+		return convertView;
 	}
-	
+
+	/**
+	 * structure contenant les éléments d'une ligne
+	 */
+	private class ViewHolder {
+		TextView txtListJour;
+		TextView txtListMontant;
+		TextView txtListMotif;
+		ImageButton cmdSuppHf;
+	}
 }
