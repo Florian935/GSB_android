@@ -3,6 +3,8 @@ package fr.cned.emdsgil.suividevosfrais.vue;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -78,6 +80,7 @@ public class MenuActivity extends AppCompatActivity {
     private void cmdMenu_clic(ImageButton button, final Class classe) {
         button.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
+                Log.d("IDENTIFIANT : ", "*********************" + FraisMois.identifiant);
                 // ouvre l'activité
                 Intent intent = new Intent(MenuActivity.this, classe);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -11,18 +11,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
+import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 
 public class MainActivity extends AppCompatActivity {
 
     // informations affichées dans l'activité
-    private String login;
-    private String password;
+    public static String login; // identifiant entré par le visiteur
+    public static String passwordEntre; // mot de passe entré par le visiteur
+    public static String passwordBdd; // mot de passe crypté stocké dans la BDD
+    public static String identifiant; // identifiant du visiteur connecté
+    public static AccesDistant accesDistant;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("GSB : Connexion");
+        // Instanciation de la classe accesDistant pour pouvoir récupérer le retour du serveur
+        accesDistant = new AccesDistant();
         // chargement des méthodes événementielles
         cmdSeConnecter_clic();
     }
@@ -36,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.cmdSeConnecter).setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
+                // Récupération et valorisation du login, du mdp et de l'identifiant du visiteur
+                accesDistant.envoi("profilAuth", null);
                 // Récupération de l'identifiant et du mot de passe entrés
                 login = ((EditText)findViewById(R.id.txtLoginAuth)).getText().toString();
-                password = ((EditText)findViewById(R.id.txtPwdAuth)).getText().toString();
-                /* TODO: dans le if, il faut appeler une méthode qui vérifie que le couple
-                    identifiant/password existe dans la BDD et est correct
-                */
-                // Si l'identifiant et le mdp sont corrects, on affiche l'activité du menu
-                if (login.equals("dandre")){
+                // Récupération du mdp entré par le visiteur
+                passwordEntre = ((EditText)findViewById(R.id.txtPwdAuth)).getText().toString();
+                // Si le couple identifiant/mdp est correct, on affiche l'activité du menu
+                if (Global.coupleLoginPwdCorrect(login, passwordEntre)){
                     accesMenuActivity();
                 } else {
                     // On indique à l'utilisateur que l'identifiant ou le mot de passe est incorrect

@@ -3,13 +3,14 @@ package fr.cned.emdsgil.suividevosfrais.modele;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
+import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 
 /**
  * Classe métier contenant les informations des frais d'un mois
  */
 public class FraisMois implements Serializable {
 
+    public static final String identifiant = MainActivity.identifiant; // identifiant du visiteur connecté
     private Integer mois; // mois concerné
     private Integer annee; // année concernée
     private Integer etape; // nombre d'étapes du mois
