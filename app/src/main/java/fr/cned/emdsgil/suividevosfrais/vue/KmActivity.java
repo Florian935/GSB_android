@@ -1,9 +1,8 @@
-package fr.cned.emdsgil.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais.vue;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.DatePicker.OnDateChangedListener;
@@ -12,11 +11,15 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Locale;
+
+import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
+import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class KmActivity extends AppCompatActivity {
 
@@ -82,7 +85,7 @@ public class KmActivity extends AppCompatActivity {
     		public void onClick(View v) {
     			retourActivityPrincipale() ;    		
     		}
-    	}) ;
+    	});
     }
 
     /**
@@ -98,7 +101,7 @@ public class KmActivity extends AppCompatActivity {
     }
     
     /**
-     * Sur le clic du bouton plus : ajout de 10 dans la quantité
+     * Sur le clic du bouton plus : ajout de 1 dans la quantité
      */
     private void cmdPlus_clic() {
     	findViewById(R.id.cmdKmPlus).setOnClickListener(new Button.OnClickListener() {
@@ -110,13 +113,13 @@ public class KmActivity extends AppCompatActivity {
     }
     
     /**
-     * Sur le clic du bouton moins : enlève 10 dans la quantité si c'est possible
+     * Sur le clic du bouton moins : enlève 1 dans la quantité si c'est possible
      */
     private void cmdMoins_clic() {
     	findViewById(R.id.cmdKmMoins).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
    				qte = Math.max(0, qte-1) ; // suppression de 10 si possible
-    			enregNewQte() ;
+    			enregNewQte();
      		}
     	}) ;    	
     }
@@ -153,7 +156,7 @@ public class KmActivity extends AppCompatActivity {
 	 * Retour à l'activité principale (le menu)
 	 */
 	private void retourActivityPrincipale() {
-		Intent intent = new Intent(KmActivity.this, MainActivity.class);
+		Intent intent = new Intent(KmActivity.this, MenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 	}

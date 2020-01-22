@@ -1,4 +1,4 @@
-package fr.cned.emdsgil.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais.vue;
 
 import android.os.Bundle;
 import android.content.Intent;
@@ -11,6 +11,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
+import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class HfActivity extends AppCompatActivity {
 
@@ -91,7 +96,7 @@ public class HfActivity extends AppCompatActivity {
 	 * Retour à l'activité principale (le menu)
 	 */
 	private void retourActivityPrincipale() {
-		Intent intent = new Intent(HfActivity.this, MainActivity.class);
+		Intent intent = new Intent(HfActivity.this, MenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 	}

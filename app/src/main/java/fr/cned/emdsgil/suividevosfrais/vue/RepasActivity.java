@@ -1,4 +1,4 @@
-package fr.cned.emdsgil.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais.vue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,7 +15,12 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class EtapeActivity extends AppCompatActivity {
+import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
+import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
+
+public class RepasActivity extends AppCompatActivity {
 
     // informations affichées dans l'activité
     private Integer annee;
@@ -25,10 +30,10 @@ public class EtapeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_etape);
-        setTitle("GSB : Frais Etapes");
+        setContentView(R.layout.activity_repas);
+        setTitle("GSB : Frais Repas");
         // modification de l'affichage du DatePicker
-        Global.changeAfficheDate((DatePicker)findViewById(R.id.datEtape), false);
+        Global.changeAfficheDate((DatePicker)findViewById(R.id.datRepas), false);
         // valorisation des propriétés
         valoriseProprietes();
         // chargement des méthodes événementielles
@@ -59,22 +64,22 @@ public class EtapeActivity extends AppCompatActivity {
      * Valorisation des propriétés avec les informations affichées
      */
     private void valoriseProprietes() {
-        annee = ((DatePicker)findViewById(R.id.datEtape)).getYear();
-        mois = ((DatePicker)findViewById(R.id.datEtape)).getMonth() + 1;
+        annee = ((DatePicker)findViewById(R.id.datRepas)).getYear();
+        mois = ((DatePicker)findViewById(R.id.datRepas)).getMonth() + 1;
         // récupération de la qte correspondant au mois actuel
         qte = 0;
         Integer key = annee*100+mois;
         if (Global.listFraisMois.containsKey(key)) {
-            qte = Global.listFraisMois.get(key).getEtape();
+            qte = Global.listFraisMois.get(key).getRepas();
         }
-        ((TextView)findViewById(R.id.txtEtape)).setText(String.format(Locale.FRANCE, "%d", qte));
+        ((TextView)findViewById(R.id.txtRepas)).setText(String.format(Locale.FRANCE, "%d", qte));
     }
 
     /**
      * Sur la selection de l'image : retour au menu principal
      */
     private void imgReturn_clic() {
-        findViewById(R.id.imgEtapeReturn).setOnClickListener(new ImageView.OnClickListener() {
+        findViewById(R.id.imgRepasReturn).setOnClickListener(new ImageView.OnClickListener() {
             public void onClick(View v) {
                 retourActivityPrincipale() ;
             }
@@ -85,19 +90,19 @@ public class EtapeActivity extends AppCompatActivity {
      * Sur le clic du bouton valider : sérialisation
      */
     private void cmdValider_clic() {
-        findViewById(R.id.cmdEtapeValider).setOnClickListener(new Button.OnClickListener() {
+        findViewById(R.id.cmdRepasValider).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Serializer.serialize(Global.listFraisMois, EtapeActivity.this) ;
+                Serializer.serialize(Global.listFraisMois, RepasActivity.this) ;
                 retourActivityPrincipale() ;
             }
         }) ;
     }
 
     /**
-     * Sur le clic du bouton plus : ajout de 10 dans la quantité
+     * Sur le clic du bouton plus : ajout de 1 dans la quantité
      */
     private void cmdPlus_clic() {
-        findViewById(R.id.cmdEtapePlus).setOnClickListener(new Button.OnClickListener() {
+        findViewById(R.id.cmdRepasPlus).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 qte+=1;
                 enregNewQte();
@@ -106,10 +111,10 @@ public class EtapeActivity extends AppCompatActivity {
     }
 
     /**
-     * Sur le clic du bouton moins : enlève 10 dans la quantité si c'est possible
+     * Sur le clic du bouton moins : enlève 1 dans la quantité si c'est possible
      */
     private void cmdMoins_clic() {
-        findViewById(R.id.cmdEtapeMoins).setOnClickListener(new Button.OnClickListener() {
+        findViewById(R.id.cmdRepasMoins).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 qte = Math.max(0, qte-1) ; // suppression de 10 si possible
                 enregNewQte();
@@ -121,7 +126,7 @@ public class EtapeActivity extends AppCompatActivity {
      * Sur le changement de date : mise à jour de l'affichage de la qte
      */
     private void dat_clic() {
-        final DatePicker uneDate = (DatePicker)findViewById(R.id.datEtape);
+        final DatePicker uneDate = (DatePicker)findViewById(R.id.datRepas);
         uneDate.init(uneDate.getYear(), uneDate.getMonth(), uneDate.getDayOfMonth(), new DatePicker.OnDateChangedListener(){
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -135,21 +140,21 @@ public class EtapeActivity extends AppCompatActivity {
      */
     private void enregNewQte() {
         // enregistrement dans la zone de texte
-        ((TextView)findViewById(R.id.txtEtape)).setText(String.format(Locale.FRANCE, "%d", qte));
+        ((TextView)findViewById(R.id.txtRepas)).setText(String.format(Locale.FRANCE, "%d", qte));
         // enregistrement dans la liste
         Integer key = annee*100+mois;
         if (!Global.listFraisMois.containsKey(key)) {
             // creation du mois et de l'annee s'ils n'existent pas déjà
             Global.listFraisMois.put(key, new FraisMois(annee, mois));
         }
-        Global.listFraisMois.get(key).setEtape(qte);
+        Global.listFraisMois.get(key).setRepas(qte);
     }
 
     /**
      * Retour à l'activité principale (le menu)
      */
     private void retourActivityPrincipale() {
-        Intent intent = new Intent(EtapeActivity.this, MainActivity.class);
+        Intent intent = new Intent(RepasActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

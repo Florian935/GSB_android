@@ -1,10 +1,9 @@
-package fr.cned.emdsgil.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais.vue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Locale;
+
+import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
+import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class NuiteeActivity extends AppCompatActivity {
 
@@ -95,7 +99,7 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Sur le clic du bouton plus : ajout de 10 dans la quantité
+     * Sur le clic du bouton plus : ajout de 1 dans la quantité
      */
     private void cmdPlus_clic() {
         findViewById(R.id.cmdNuiteePlus).setOnClickListener(new Button.OnClickListener() {
@@ -107,7 +111,7 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Sur le clic du bouton moins : enlève 10 dans la quantité si c'est possible
+     * Sur le clic du bouton moins : enlève 1 dans la quantité si c'est possible
      */
     private void cmdMoins_clic() {
         findViewById(R.id.cmdNuiteeMoins).setOnClickListener(new Button.OnClickListener() {
@@ -150,7 +154,7 @@ public class NuiteeActivity extends AppCompatActivity {
      * Retour à l'activité principale (le menu)
      */
     private void retourActivityPrincipale() {
-        Intent intent = new Intent(NuiteeActivity.this, MainActivity.class);
+        Intent intent = new Intent(NuiteeActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

@@ -1,4 +1,4 @@
-package fr.cned.emdsgil.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
+import fr.cned.emdsgil.suividevosfrais.R;
 
 public class HfRecapActivity extends AppCompatActivity {
 
@@ -100,7 +104,7 @@ public class HfRecapActivity extends AppCompatActivity {
 	 * Retour à l'activité principale (le menu)
 	 */
 	private void retourActivityPrincipale() {
-		Intent intent = new Intent(HfRecapActivity.this, MainActivity.class);
+		Intent intent = new Intent(HfRecapActivity.this, MenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 	}

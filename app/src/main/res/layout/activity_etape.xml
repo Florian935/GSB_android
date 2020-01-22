@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.cned.emdsgil.suividevosfrais.EtapeActivity">
+    tools:context="fr.cned.emdsgil.suividevosfrais.vue.EtapeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
