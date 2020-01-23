@@ -3,6 +3,8 @@ package fr.cned.emdsgil.suividevosfrais.outils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public abstract class MesOutils {
 
@@ -48,5 +50,45 @@ public abstract class MesOutils {
             hex.append(Integer.toString((int) bits[i] & 0xff, 16));
         }
         return hex.toString();
+    }
+
+    /**
+     * Conversion d'une date au format Date vers le format String
+     * @param uneDate au format Date
+     * @return uneDate au format String
+     */
+    public static String convertDateToString(Date uneDate){
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MMM-dd");
+        return date.format(uneDate);
+    }
+
+    /**
+     * Retourne le mois de la date passée en paramètre au format littéral
+     * @param uneDate au format Date
+     * @return le mois actuel sous forme MMM au format String
+     */
+    public static String actualMonth(Date uneDate){
+        String date = convertDateToString(uneDate);
+        return date.substring(5, 8);
+    }
+
+    /**
+     * Retourne l'année de la date passée en paramètre
+     * @param uneDate au format Date
+     * @return l'année actuelle sous forme yyyy au format String
+     */
+    public static String actualYear(Date uneDate){
+        String date = convertDateToString(uneDate);
+        return date.substring(0, 4);
+    }
+
+    /**
+     * Retourne le mois de la date passée en paramètre au format numérique
+     * @param uneDate au format Date
+     * @return le mois actuel sous forme MM au format String
+     */
+    public static String actualMoisInNumeric(Date uneDate){
+        SimpleDateFormat date = new SimpleDateFormat("MM");
+        return date.format(uneDate);
     }
 }

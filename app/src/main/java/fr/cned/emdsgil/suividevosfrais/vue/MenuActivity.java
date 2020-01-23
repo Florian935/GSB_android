@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
 import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class MenuActivity extends AppCompatActivity {
@@ -91,10 +93,8 @@ public class MenuActivity extends AppCompatActivity {
      */
     private void recupFrais(){
         // Récupération des frais forfaits et hors forfaits du visiteur
-        accesDistant.envoi("fraisForfait", convertToJSONArray());
-        Log.d("fraisForfait", "****************" + convertToJSONArray());
-        accesDistant.envoi("fraisHorsForfait", convertToJSONArray());
-        Log.d("fraisHorsForfait", "****************" + convertToJSONArray());
+        controle.recupDonnees("getFraisForfait", convertToJSONArray());
+        controle.recupDonnees("getFraisHF", convertToJSONArray());
     }
 
     /**
@@ -117,19 +117,21 @@ public class MenuActivity extends AppCompatActivity {
     private void cmdTransfert_clic() {
         findViewById(R.id.cmdTransfert).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                // envoi les informations sérialisées vers le serveur
-                // en construction
+
             }
         });
     }
 
     /**
-     * Conversion de l'identifiant au format JSONArray
-     * @return l'identifiant au format JSONArray
+     * Conversion de l'identifiant et de la date au format JSONArray
+     * @return l'identifiant et la date sous la forme aaaamm au format JSONArray
      */
     public JSONArray convertToJSONArray(){
         List list = new ArrayList();
         list.add(controle.getIdentifiant());
+        // Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
+        String idMois = MesOutils.actualYear(new Date()) + MesOutils.actualMoisInNumeric(new Date());
+        list.add(idMois);
 
         return new JSONArray(list);
     }

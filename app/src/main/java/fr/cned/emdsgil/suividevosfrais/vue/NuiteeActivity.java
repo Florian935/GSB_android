@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,11 +14,21 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
+import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
 import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class NuiteeActivity extends AppCompatActivity {
@@ -26,14 +37,18 @@ public class NuiteeActivity extends AppCompatActivity {
     private Integer annee;
     private Integer mois;
     private Integer qte;
+    private TextView txtDateNuitee;
+    private Controle controle;
+    public static AccesDistant accesDistant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuitee);
         setTitle("GSB : Frais Nuitées");
-        // modification de l'affichage du DatePicker
-        Global.changeAfficheDate((DatePicker)findViewById(R.id.datNuitee), false);
+        this.txtDateNuitee = findViewById(R.id.txtDateNuitee);
+        controle = Controle.getInstance(null);
+        this.accesDistant = new AccesDistant();
         // valorisation des propriétés
         valoriseProprietes();
         // chargement des méthodes événementielles
@@ -41,7 +56,6 @@ public class NuiteeActivity extends AppCompatActivity {
         cmdValider_clic();
         cmdPlus_clic();
         cmdMoins_clic();
-        dat_clic();
     }
 
     @Override
@@ -50,6 +64,7 @@ public class NuiteeActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_actions, menu);
         return true;
+
     }
 
     @Override
@@ -64,14 +79,12 @@ public class NuiteeActivity extends AppCompatActivity {
      * Valorisation des propriétés avec les informations affichées
      */
     private void valoriseProprietes() {
-        annee = ((DatePicker)findViewById(R.id.datNuitee)).getYear();
-        mois = ((DatePicker)findViewById(R.id.datNuitee)).getMonth() + 1;
-        // récupération de la qte correspondant au mois actuel
-        qte = 0;
-        Integer key = annee*100+mois;
-        if (Global.listFraisMois.containsKey(key)) {
-            qte = Global.listFraisMois.get(key).getNuitee();
-        }
+        // Affichage de la date actuelle
+        String mois = MesOutils.actualMonth(new Date());
+        String annee = MesOutils.actualYear(new Date());
+        String date = mois + " " + annee;
+        this.txtDateNuitee.setText(date);
+        qte = controle.getUnFraisForfait("NUI");
         ((TextView)findViewById(R.id.txtNuitee)).setText(String.format(Locale.FRANCE, "%d", qte));
     }
 
@@ -87,15 +100,14 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Sur le clic du bouton valider : sérialisation
+     * Sur le clic du bouton valider : enregistrement de la valeur saisie dans la BDD
      */
     private void cmdValider_clic() {
         findViewById(R.id.cmdNuiteeValider).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Serializer.serialize(Global.listFraisMois, NuiteeActivity.this) ;
-                retourActivityPrincipale() ;
+                controle.updateDonnees("updateFraisForfait", convertToJSONArray());
             }
-        }) ;
+        });
     }
 
     /**
@@ -123,31 +135,11 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Sur le changement de date : mise à jour de l'affichage de la qte
-     */
-    private void dat_clic() {
-        final DatePicker uneDate = (DatePicker)findViewById(R.id.datNuitee);
-        uneDate.init(uneDate.getYear(), uneDate.getMonth(), uneDate.getDayOfMonth(), new DatePicker.OnDateChangedListener(){
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                valoriseProprietes();
-            }
-        });
-    }
-
-    /**
-     * Enregistrement dans la zone de texte et dans la liste de la nouvelle qte, à la date choisie
+     * Enregistrement dans la zone de texte de la nouvelle qte
      */
     private void enregNewQte() {
         // enregistrement dans la zone de texte
         ((TextView)findViewById(R.id.txtNuitee)).setText(String.format(Locale.FRANCE, "%d", qte));
-        // enregistrement dans la liste
-        Integer key = annee*100+mois;
-        if (!Global.listFraisMois.containsKey(key)) {
-            // creation du mois et de l'annee s'ils n'existent pas déjà
-            Global.listFraisMois.put(key, new FraisMois(annee, mois));
-        }
-        Global.listFraisMois.get(key).setNuitee(qte);
     }
 
     /**
@@ -157,5 +149,24 @@ public class NuiteeActivity extends AppCompatActivity {
         Intent intent = new Intent(NuiteeActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    /**
+     * Conversion de l'identifiant, de la date et de l'id du frais forfait au format JSONArray
+     * @return l'identifiant et la date sous la forme aaaamm au format JSONArray
+     */
+    public JSONArray convertToJSONArray(){
+        List list = new ArrayList();
+        // Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
+        String idMois = MesOutils.actualYear(new Date()) + MesOutils.actualMoisInNumeric(new Date());
+        // id du frais
+        String idFrais = "NUI";
+        list.add(controle.getIdentifiant());
+        list.add(idMois);
+        list.add(idFrais);
+        list.add(qte);
+
+
+        return new JSONArray(list);
     }
 }

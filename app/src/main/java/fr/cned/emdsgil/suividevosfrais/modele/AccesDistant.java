@@ -6,6 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.outils.AccesHTTP;
 import fr.cned.emdsgil.suividevosfrais.outils.AsyncResponse;
@@ -38,8 +41,8 @@ public class AccesDistant implements AsyncResponse {
         String[] message = output.split("%");
         // contrôle si le retour est correct (au moins 2 cases)
         if(message.length>1) {
+            // Récupération de l'id, du mdp et du login du visiteur qui se connecte
             if (message[0].equals("recupInfos")) {
-                Log.d("recupInfos", "****************" + message[1]);
                 try{
                     // Récupération des informations
                     JSONObject info = new JSONObject(message[1]);
@@ -56,16 +59,37 @@ public class AccesDistant implements AsyncResponse {
                     e.printStackTrace();
                 }
             }else{
-                if (message[0].equals("fraisForfait")) {
-                    // TODO : valorisation des frais forfaits dans Global.listFraisMois (prendre ex
-                    //                    sur kmActivity pour les valorisations)
-                    Log.d("fraisForfait", "****************" + message[1]);
-                }else{
-
-                }if (message[0].equals("fraisHorsForfait")) {
-                    // TODO : valorisation des frais hors forfaits dans Global.listFraisMois (prendre ex
-                    //                    sur kmActivity pour les valorisations)
-                    Log.d("fraisHorsForfait", "****************" + message[1]);
+                // Récupération des frais forfaits du visiteur pour le mois actuel
+                if (message[0].equals("getFraisForfait")) {
+                    try {
+                        // récupération des informations
+                        JSONArray lesInfos = new JSONArray(message[1]);
+                        ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
+                        Hashtable<String, Integer> lesFraisForfait = new Hashtable<>();
+                        for(int k=0 ; k<lesInfos.length() ; k++){
+                            JSONObject info = new JSONObject(lesInfos.get(k).toString());
+                            String idFrais = info.getString("idfraisforfait");
+                            Integer quantite = info.getInt("quantite");
+                            // FraisForfait fraisForfait = new FraisForfait(idFrais, quantite);
+                            // lesFraisForfaits.add(fraisForfait);
+                            lesFraisForfait.put(idFrais, quantite);
+                        }
+                        // mémorisation des profils
+                        controle.setLesFraisForfait(lesFraisForfait);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    // Récupération des frais hors forfait du visiteur pour le mois actuel
+                    if (message[0].equals("getFraisHF")) {
+                        Log.d("getFraisHF", "****************" + message[1]);
+                    } else {
+                        // Mise à jour dans la BDD
+                        if (message[0].equals("updateFraisForfait")) {
+                            // pour vérification, affiche le contenu du retour dans la console
+                            Log.d("updateFraisForfait", "****************" + message[1]);
+                        }
+                    }
                 }
             }
         } else{

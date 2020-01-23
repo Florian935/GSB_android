@@ -19,7 +19,6 @@ import java.util.List;
 import fr.cned.emdsgil.suividevosfrais.R;
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
-import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
                 // Récupération de l'identifiant et du mot de passe entrés
                 login = ((EditText)findViewById(R.id.txtLoginAuth)).getText().toString();
                 passwordEntre = ((EditText)findViewById(R.id.txtPwdAuth)).getText().toString();
-                accesDistant.envoi("recupInfos", convertToJSONArray());
+                // Récupération dans la BDD de l'id du visiteur
+                controle.recupDonnees("recupInfos", convertToJSONArray());
             }
         });
     }

@@ -6,7 +6,12 @@ import android.util.Log;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
+import fr.cned.emdsgil.suividevosfrais.modele.FraisForfait;
+import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 import fr.cned.emdsgil.suividevosfrais.vue.MenuActivity;
@@ -22,6 +27,8 @@ public final class Controle {
     private String identifiant;
     private String passwordBdd;
     private String login;
+    private ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
+    private Hashtable<String, Integer> lesFraisForfait = new Hashtable<>();
 
     /**
      * Constructeur privé
@@ -38,7 +45,7 @@ public final class Controle {
         if(Controle.instance==null){
             Controle.context = context;
             Controle.instance = new Controle();
-            Log.d("GET INSTANCE", "**************");
+            accesDistant = new AccesDistant();
         }
         return Controle.instance;
     }
@@ -91,5 +98,41 @@ public final class Controle {
         intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         // startActivity(intent);
         Controle.this.context.startActivity(intent);
+    }
+
+
+    /**
+     * Récupération dans la BDD
+     * @param operation opération à effectuer
+     * @param lesDonnees données fournies
+     */
+    public void recupDonnees(String operation, JSONArray lesDonnees){
+        accesDistant.envoi(operation, lesDonnees);
+    }
+
+    /**
+     * Mise à jour dans la BDD
+     * @param operation opération à effectuer
+     * @param lesDonnees données fournies
+     */
+    public void updateDonnees(String operation, JSONArray lesDonnees){
+        accesDistant.envoi(operation, lesDonnees);
+    }
+
+    /**
+     * Valorise les frais forfaits du mois actuel
+     * @param lesFraisForfait
+     */
+    public void setLesFraisForfait(Hashtable<String, Integer> lesFraisForfait){
+        this.lesFraisForfait = lesFraisForfait;
+    }
+
+    /**
+     * Permet de récupérer un frais forfait en fonction de la clé fournie
+     * @param key permettant de savoir clé frais forfait on récupère
+     * @return la quantité du frais forfait souhaité
+     */
+    public Integer getUnFraisForfait(String key){
+        return this.lesFraisForfait.get(key);
     }
 }
