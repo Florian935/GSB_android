@@ -3,6 +3,8 @@ package fr.cned.emdsgil.suividevosfrais.vue;
 import android.os.Bundle;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;

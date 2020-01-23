@@ -80,7 +80,7 @@ public class HfRecapActivity extends AppCompatActivity {
     private void imgReturn_clic() {
     	findViewById(R.id.imgHfRecapReturn).setOnClickListener(new ImageView.OnClickListener() {
     		public void onClick(View v) {
-    			retourActivityPrincipale() ;    		
+    			retourActivityPrincipale();
     		}
     	}) ;
     }

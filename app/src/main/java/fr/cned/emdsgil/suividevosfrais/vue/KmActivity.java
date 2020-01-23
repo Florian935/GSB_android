@@ -3,6 +3,7 @@ package fr.cned.emdsgil.suividevosfrais.vue;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.DatePicker.OnDateChangedListener;
@@ -147,7 +148,7 @@ public class KmActivity extends AppCompatActivity {
 		Integer key = annee*100+mois ;
 		if (!Global.listFraisMois.containsKey(key)) {
 			// creation du mois et de l'annee s'ils n'existent pas déjà
-			Global.listFraisMois.put(key, new FraisMois(annee, mois)) ;
+			Global.listFraisMois.put(key, new FraisMois(annee, mois));
 		}
 		Global.listFraisMois.get(key).setKm(qte);
 	}

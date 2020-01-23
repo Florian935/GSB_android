@@ -3,6 +3,7 @@ package fr.cned.emdsgil.suividevosfrais.modele;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 
 /**
@@ -10,7 +11,6 @@ import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
  */
 public class FraisMois implements Serializable {
 
-    public static final String identifiant = MainActivity.identifiant; // identifiant du visiteur connecté
     private Integer mois; // mois concerné
     private Integer annee; // année concernée
     private Integer etape; // nombre d'étapes du mois
@@ -18,6 +18,8 @@ public class FraisMois implements Serializable {
     private Integer nuitee; // nombre de nuitées du mois
     private Integer repas; // nombre de repas du mois
     private final ArrayList<FraisHf> lesFraisHf; // liste des frais hors forfait du mois
+    private static Controle controle = Controle.getInstance(null);
+    public static String identifiant = controle.getIdentifiant();
 
     public FraisMois(Integer annee, Integer mois) {
         this.annee = annee;

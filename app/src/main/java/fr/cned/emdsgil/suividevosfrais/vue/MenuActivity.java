@@ -11,14 +11,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import java.util.Hashtable;
+import org.json.JSONArray;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
+import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
 import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
 import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class MenuActivity extends AppCompatActivity {
+
+    private Controle controle;
+    public static AccesDistant accesDistant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +44,10 @@ public class MenuActivity extends AppCompatActivity {
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdEtape)), EtapeActivity.class);
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdRepas)), RepasActivity.class);
         cmdTransfert_clic();
+        this.accesDistant = new AccesDistant();
+        // Récupération du contrôleur
+        this.controle = Controle.getInstance(this);
+        recupFrais();
     }
 
     @Override
@@ -70,8 +83,18 @@ public class MenuActivity extends AppCompatActivity {
 			 * Original : Typage explicit =
 			 * Global.listFraisMois = new Hashtable<Integer, FraisMois>();
 			*/
-
         }
+    }
+
+    /**
+     * Récupération des frais forfaits du visiteur
+     */
+    private void recupFrais(){
+        // Récupération des frais forfaits et hors forfaits du visiteur
+        accesDistant.envoi("fraisForfait", convertToJSONArray());
+        Log.d("fraisForfait", "****************" + convertToJSONArray());
+        accesDistant.envoi("fraisHorsForfait", convertToJSONArray());
+        Log.d("fraisHorsForfait", "****************" + convertToJSONArray());
     }
 
     /**
@@ -80,7 +103,6 @@ public class MenuActivity extends AppCompatActivity {
     private void cmdMenu_clic(ImageButton button, final Class classe) {
         button.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Log.d("IDENTIFIANT : ", "*********************" + FraisMois.identifiant);
                 // ouvre l'activité
                 Intent intent = new Intent(MenuActivity.this, classe);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -99,5 +121,16 @@ public class MenuActivity extends AppCompatActivity {
                 // en construction
             }
         });
+    }
+
+    /**
+     * Conversion de l'identifiant au format JSONArray
+     * @return l'identifiant au format JSONArray
+     */
+    public JSONArray convertToJSONArray(){
+        List list = new ArrayList();
+        list.add(controle.getIdentifiant());
+
+        return new JSONArray(list);
     }
 }

@@ -8,6 +8,7 @@ import android.widget.DatePicker;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
 
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 
@@ -19,6 +20,7 @@ public abstract class Global {
      * Original : Typage explicit =
 	 * public static Hashtable<Integer, FraisMois> listFraisMois = new Hashtable<Integer, FraisMois>();
 	*/
+    public static Controle controle = Controle.getInstance(null);
 
     // fichier contenant les informations sérialisées
     public static final String filename = "save.fic";
@@ -45,25 +47,4 @@ public abstract class Global {
             Log.d("ERROR", e.getMessage());
         }
     }
-
-    /**
-     * Vérification du login et du mdp entré par le visiteur lors de l'authentification
-     *
-     * @param login login entré par le visiteur
-     * @param password mdp entré par le visiteur
-     * @return
-     */
-    public static boolean coupleLoginPwdCorrect(String login, String password) {
-        // On crypte le mot de passe passé en paramètre
-        String passCrypte = MesOutils.hashString(password);
-
-        // Si le couple identifiant/mdp crypté correspond au couple identifiant/mdp crypté dans la
-        // bdd, on retourne true
-        if (login.equals(MainActivity.login) && passCrypte.equals(MainActivity.passwordBdd)) {
-            return true;
-        }
-        return false;
-    }
-
-
 }

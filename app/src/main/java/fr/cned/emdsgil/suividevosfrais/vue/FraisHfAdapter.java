@@ -37,7 +37,7 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return lesFrais.size() ;
+		return lesFrais.size();
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public Object getItem(int index) {
-		return lesFrais.get(index) ;
+		return lesFrais.get(index);
 	}
 
 	/**
