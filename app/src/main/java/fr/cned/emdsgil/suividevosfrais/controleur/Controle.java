@@ -2,15 +2,20 @@ package fr.cned.emdsgil.suividevosfrais.controleur;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
+import android.view.View;
+import android.widget.DatePicker;
 
 import org.json.JSONArray;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisForfait;
+import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
 import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
@@ -20,7 +25,6 @@ public final class Controle {
 
     // propriétés
     private static Controle instance = null;
-    private static String nomFic = "saveprofil";
     private static AccesDistant accesDistant;
     public static Context context;
     private static MainActivity mainActivity;
@@ -29,6 +33,7 @@ public final class Controle {
     private String login;
     private ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
     private Hashtable<String, Integer> lesFraisForfait = new Hashtable<>();
+    private Hashtable<Integer, FraisHf> lesFraisHF = new Hashtable<>();
 
     /**
      * Constructeur privé
@@ -74,6 +79,8 @@ public final class Controle {
         return login;
     }
 
+    public Hashtable<Integer, FraisHf> getLesFraisHF() { return lesFraisHF; }
+
     /**
      * Vérification du login et du mdp entré par le visiteur lors de l'authentification
      *
@@ -100,31 +107,37 @@ public final class Controle {
         Controle.this.context.startActivity(intent);
     }
 
-
     /**
-     * Récupération dans la BDD
+     * Mise à jour  ou récupération dans la BDD en fonction des paramètres fournis
      * @param operation opération à effectuer
      * @param lesDonnees données fournies
      */
-    public void recupDonnees(String operation, JSONArray lesDonnees){
-        accesDistant.envoi(operation, lesDonnees);
-    }
-
-    /**
-     * Mise à jour dans la BDD
-     * @param operation opération à effectuer
-     * @param lesDonnees données fournies
-     */
-    public void updateDonnees(String operation, JSONArray lesDonnees){
+    public void accesDonnees(String operation, JSONArray lesDonnees){
         accesDistant.envoi(operation, lesDonnees);
     }
 
     /**
      * Valorise les frais forfaits du mois actuel
-     * @param lesFraisForfait
+     * @param lesFraisForfait à valoriser
      */
     public void setLesFraisForfait(Hashtable<String, Integer> lesFraisForfait){
         this.lesFraisForfait = lesFraisForfait;
+    }
+
+    /**
+     * Valorise les frais hors forfaits du mois actuel
+     * @param lesFraisHF à valoriser
+     */
+    public void setLesFraisHorsForfait(Hashtable <Integer, FraisHf> lesFraisHF){
+        this.lesFraisHF = lesFraisHF;;
+    }
+
+    /**
+     * Permet d'ajouter un frais HF dans la liste des frais HF
+     * @param unFraisHF a ajouter dans la liste
+     */
+    public void ajouterUnFraisHf(Integer idFraisHF, FraisHf unFraisHF){
+        this.lesFraisHF.put(idFraisHF, unFraisHF);
     }
 
     /**
@@ -134,5 +147,43 @@ public final class Controle {
      */
     public Integer getUnFraisForfait(String key){
         return this.lesFraisForfait.get(key);
+    }
+
+    /**
+     * Modification de l'affichage du DatePicker passé en paramètre en fonction des paramètres fournis
+     *
+     * @param datePicker à formater
+     * @param afficheJours true ou false
+     * @param afficheMois true ou false
+     * @param afficheAnnee true ou false
+     */
+    public static void changeAfficheDate(DatePicker datePicker, boolean afficheJours, boolean afficheMois, boolean afficheAnnee) {
+        try {
+            Field f[] = datePicker.getClass().getDeclaredFields();
+            for (Field field : f) {
+                int daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android");
+                int monthSpinnerId = Resources.getSystem().getIdentifier("month", "id", "android");
+                int yearSpinnerId = Resources.getSystem().getIdentifier("year", "id", "android");
+                datePicker.init(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), null);
+                if (daySpinnerId != 0)
+                {
+                    View daySpinner = datePicker.findViewById(daySpinnerId);
+                    View monthSpinner = datePicker.findViewById(monthSpinnerId);
+                    View yearSpinner = datePicker.findViewById(yearSpinnerId);
+                    if (!afficheJours)
+                    {
+                        daySpinner.setVisibility(View.GONE);
+                    }
+                    if (!afficheMois){
+                        monthSpinner.setVisibility(View.GONE);
+                    }
+                    if (!afficheAnnee) {
+                        yearSpinner.setVisibility(View.GONE);
+                    }
+                }
+            }
+        } catch (SecurityException | IllegalArgumentException e) {
+            Log.d("ERROR", e.getMessage());
+        }
     }
 }

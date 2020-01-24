@@ -19,7 +19,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
-import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
 import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
@@ -28,8 +27,7 @@ import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private Controle controle;
-    public static AccesDistant accesDistant;
+    private Controle controle; // Contient l'unique instance du contrôleur
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +44,8 @@ public class MenuActivity extends AppCompatActivity {
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdEtape)), EtapeActivity.class);
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdRepas)), RepasActivity.class);
         cmdTransfert_clic();
-        this.accesDistant = new AccesDistant();
         // Récupération du contrôleur
-        this.controle = Controle.getInstance(this);
+        this.controle = Controle.getInstance(null);
         recupFrais();
     }
 
@@ -93,8 +90,8 @@ public class MenuActivity extends AppCompatActivity {
      */
     private void recupFrais(){
         // Récupération des frais forfaits et hors forfaits du visiteur
-        controle.recupDonnees("getFraisForfait", convertToJSONArray());
-        controle.recupDonnees("getFraisHF", convertToJSONArray());
+        controle.accesDonnees("getFraisHF", convertToJSONArray());
+        controle.accesDonnees("getFraisForfait", convertToJSONArray());
     }
 
     /**

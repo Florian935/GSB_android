@@ -75,7 +75,7 @@ public class FraisHfAdapter extends BaseAdapter {
 		}
 		holder.txtListJour.setText(String.format(Locale.FRANCE, "%d", lesFrais.get(index).getJour()));
 		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFrais.get(index).getMontant()));
-		holder.txtListMotif.setText(lesFrais.get(index).getMotif());
+		holder.txtListMotif.setText(lesFrais.get(index).getLibelle());
 		holder.cmdSuppHf.setTag(index);
 		// gestion de l'événement clic sur le bouton de suppression
 		holder.cmdSuppHf.setOnClickListener(new View.OnClickListener(){

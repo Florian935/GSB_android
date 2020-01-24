@@ -4,42 +4,35 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
-import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
-import fr.cned.emdsgil.suividevosfrais.modele.FraisMois;
-import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
-import fr.cned.emdsgil.suividevosfrais.outils.Serializer;
 
 public class NuiteeActivity extends AppCompatActivity {
 
     // informations affichées dans l'activité
-    private Integer annee;
-    private Integer mois;
+    private String moisMMM; // mois au format MMM
+    private String moisMM; // mois au format MM
+    private String annee; // annee au format aaaa
     private Integer qte;
     private TextView txtDateNuitee;
     private Controle controle;
-    public static AccesDistant accesDistant;
+    private final String idFrais = "NUI";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +40,10 @@ public class NuiteeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nuitee);
         setTitle("GSB : Frais Nuitées");
         this.txtDateNuitee = findViewById(R.id.txtDateNuitee);
+        this.moisMMM = MesOutils.actualMonth(new Date());
+        this.moisMM = MesOutils.actualMoisInNumeric(new Date());
+        this.annee = MesOutils.actualYear(new Date());
         controle = Controle.getInstance(null);
-        this.accesDistant = new AccesDistant();
         // valorisation des propriétés
         valoriseProprietes();
         // chargement des méthodes événementielles
@@ -64,7 +59,6 @@ public class NuiteeActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_actions, menu);
         return true;
-
     }
 
     @Override
@@ -76,15 +70,14 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Valorisation des propriétés avec les informations affichées
+     * Valorisation des propriétés
      */
     private void valoriseProprietes() {
         // Affichage de la date actuelle
-        String mois = MesOutils.actualMonth(new Date());
-        String annee = MesOutils.actualYear(new Date());
-        String date = mois + " " + annee;
+        String date = moisMMM + " " + annee;
         this.txtDateNuitee.setText(date);
-        qte = controle.getUnFraisForfait("NUI");
+        // récupération de la quantité pour ce frais
+        qte = controle.getUnFraisForfait(idFrais);
         ((TextView)findViewById(R.id.txtNuitee)).setText(String.format(Locale.FRANCE, "%d", qte));
     }
 
@@ -100,12 +93,13 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Sur le clic du bouton valider : enregistrement de la valeur saisie dans la BDD
+     * Sur le clic du bouton valider : enregistrement du frais forfait dans la BDD
      */
     private void cmdValider_clic() {
         findViewById(R.id.cmdNuiteeValider).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                controle.updateDonnees("updateFraisForfait", convertToJSONArray());
+                controle.accesDonnees("updateFraisForfait", convertToJSONArray());
+                retourActivityPrincipale();
             }
         });
     }
@@ -128,7 +122,7 @@ public class NuiteeActivity extends AppCompatActivity {
     private void cmdMoins_clic() {
         findViewById(R.id.cmdNuiteeMoins).setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                qte = Math.max(0, qte-1) ; // suppression de 10 si possible
+                qte = Math.max(0, qte-1) ; // suppression de 1 si possible
                 enregNewQte();
             }
         }) ;
@@ -152,20 +146,17 @@ public class NuiteeActivity extends AppCompatActivity {
     }
 
     /**
-     * Conversion de l'identifiant, de la date et de l'id du frais forfait au format JSONArray
-     * @return l'identifiant et la date sous la forme aaaamm au format JSONArray
+     * Conversion de l'identifiant, de la date et de l'id du frais forfait et de la quantité au format JSONArray
+     * @return l'identifiant, la date sous la forme aaaamm, l'id du frais et la quantité au format JSONArray
      */
     public JSONArray convertToJSONArray(){
         List list = new ArrayList();
         // Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
-        String idMois = MesOutils.actualYear(new Date()) + MesOutils.actualMoisInNumeric(new Date());
-        // id du frais
-        String idFrais = "NUI";
+        String idMois = annee + moisMM;
         list.add(controle.getIdentifiant());
         list.add(idMois);
         list.add(idFrais);
         list.add(qte);
-
 
         return new JSONArray(list);
     }

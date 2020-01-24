@@ -7,11 +7,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.outils.AccesHTTP;
 import fr.cned.emdsgil.suividevosfrais.outils.AsyncResponse;
+import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 
 public class AccesDistant implements AsyncResponse {
@@ -64,17 +66,14 @@ public class AccesDistant implements AsyncResponse {
                     try {
                         // récupération des informations
                         JSONArray lesInfos = new JSONArray(message[1]);
-                        ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
                         Hashtable<String, Integer> lesFraisForfait = new Hashtable<>();
                         for(int k=0 ; k<lesInfos.length() ; k++){
                             JSONObject info = new JSONObject(lesInfos.get(k).toString());
                             String idFrais = info.getString("idfraisforfait");
                             Integer quantite = info.getInt("quantite");
-                            // FraisForfait fraisForfait = new FraisForfait(idFrais, quantite);
-                            // lesFraisForfaits.add(fraisForfait);
                             lesFraisForfait.put(idFrais, quantite);
                         }
-                        // mémorisation des profils
+                        // mémorisation des frais forfait
                         controle.setLesFraisForfait(lesFraisForfait);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -82,12 +81,46 @@ public class AccesDistant implements AsyncResponse {
                 }else {
                     // Récupération des frais hors forfait du visiteur pour le mois actuel
                     if (message[0].equals("getFraisHF")) {
-                        Log.d("getFraisHF", "****************" + message[1]);
-                    } else {
+                        try {
+                            // récupération des informations
+                            JSONArray lesInfos = new JSONArray(message[1]);
+                            Hashtable<Integer, FraisHf> lesFraisHF = new Hashtable<>();
+                            for(int k=0 ; k<lesInfos.length() ; k++){
+                                JSONObject info = new JSONObject(lesInfos.get(k).toString());
+                                Integer idFraisHF = info.getInt("id");
+                                Double montant = info.getDouble("montant");
+                                String libelle = info.getString("libelle");
+                                String jour = MesOutils.actualDayOfMonth(new Date());
+                                FraisHf unFraisHF = new FraisHf(montant, libelle, jour);
+                                lesFraisHF.put(idFraisHF, unFraisHF);
+                            }
+                            // mémorisation des frais hors forfait
+                            controle.setLesFraisHorsForfait(lesFraisHF);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
                         // Mise à jour dans la BDD
                         if (message[0].equals("updateFraisForfait")) {
                             // pour vérification, affiche le contenu du retour dans la console
                             Log.d("updateFraisForfait", "****************" + message[1]);
+                        }else{
+                            if(message[0].equals("ajoutFraisHF")){
+                                // Récupération des informations du frais HF ajouté
+                                try {
+                                    JSONObject info = new JSONObject(message[1]);
+                                    Integer dernierId = info.getInt("idMax");
+                                    String libelle = info.getString("libelle");
+                                    Double montant = info.getDouble("montant");
+                                    String jour = (info.getString("date")).substring(8, 10);
+
+                                    // On ajoute dans la liste des frais HF le dernier frais HF
+                                    // qui a été ajouté contenant l'id dernierId qui vient d'être retourné
+                                    controle.ajouterUnFraisHf(dernierId, new FraisHf(montant, libelle, jour));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
                 }

@@ -63,6 +63,16 @@ public abstract class MesOutils {
     }
 
     /**
+     * Retourne le jour de la date passée en paramètre au format numérique
+     * @param uneDate au format Date
+     * @return le jour actuel du mois sous forme dd au format String
+     */
+    public static String actualDayOfMonth(Date uneDate){
+        String date = convertDateToString(uneDate);
+        return date.substring(9, 11);
+    }
+
+    /**
      * Retourne le mois de la date passée en paramètre au format littéral
      * @param uneDate au format Date
      * @return le mois actuel sous forme MMM au format String
@@ -90,5 +100,18 @@ public abstract class MesOutils {
     public static String actualMoisInNumeric(Date uneDate){
         SimpleDateFormat date = new SimpleDateFormat("MM");
         return date.format(uneDate);
+    }
+
+    /**
+     * Permet de convertir l'entier correspondant au jour du mois au format String sous la forme dd
+     * @param day à convertir
+     * @return day converti au format dd (String)
+     */
+    public static String convertIntDayToStringDay(Integer day){
+        String dayString = day.toString();
+        if (dayString.length() == 1){
+            dayString = "0" + dayString;
+        }
+        return dayString;
     }
 }

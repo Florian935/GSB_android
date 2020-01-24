@@ -14,19 +14,24 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
 import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
 
 public class HfRecapActivity extends AppCompatActivity {
 
+	private Controle controle; // Contient l'unique instance du contrôleur
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hf_recap);
         setTitle("GSB : Récap Frais HF");
+		// Récupération du contrôleur
+		this.controle = Controle.getInstance(this);
 		// modification de l'affichage du DatePicker
-		Global.changeAfficheDate((DatePicker) findViewById(R.id.datHfRecap), false);
+		controle.changeAfficheDate((DatePicker) findViewById(R.id.datHfRecap), true, false, false);
 		// valorisation des propriétés
 		afficheListe();
         // chargement des méthodes événementielles

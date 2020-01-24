@@ -61,15 +61,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <DatePicker
             android:id="@+id/datHfRecap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_weight="0.5"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner" />
+            android:datePickerMode="spinner"
+            android:paddingLeft="50dp" />
+
+        <TextView
+            android:id="@+id/txtDateHfRecap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:autoSizeTextType="none"
+            android:gravity="center|left"
+            android:lines="1"
+            android:textColor="#3A3636"
+            android:textSize="24sp" />
 
     </LinearLayout>
 

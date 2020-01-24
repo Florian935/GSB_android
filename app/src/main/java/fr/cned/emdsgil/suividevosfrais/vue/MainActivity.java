@@ -2,14 +2,12 @@ package fr.cned.emdsgil.suividevosfrais.vue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 
@@ -18,7 +16,6 @@ import java.util.List;
 
 import fr.cned.emdsgil.suividevosfrais.R;
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
-import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
     // informations affichées dans l'activité
     public static String login; // identifiant entré par le visiteur
     public static String passwordEntre; // mot de passe entré par le visiteur
-    public static AccesDistant accesDistant;
-    private Controle controle;
+    private Controle controle; // Contient l'unique instance du contrôleur
     public static TextView txtErrorAuth;
 
 
@@ -36,9 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("GSB : Connexion");
-        this.accesDistant = new AccesDistant();
         // Créé le contrôleur
-        controle = Controle.getInstance(null);
+        this.controle = Controle.getInstance(null);
         Controle.context = this;
         this.txtErrorAuth = (TextView)findViewById(R.id.txtErrorAuth);
         // chargement des méthodes événementielles
@@ -58,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 login = ((EditText)findViewById(R.id.txtLoginAuth)).getText().toString();
                 passwordEntre = ((EditText)findViewById(R.id.txtPwdAuth)).getText().toString();
                 // Récupération dans la BDD de l'id du visiteur
-                controle.recupDonnees("recupInfos", convertToJSONArray());
+                controle.accesDonnees("recupInfos", convertToJSONArray());
             }
         });
     }

@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
-import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
-import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 
 public abstract class Global {
 
@@ -26,27 +24,4 @@ public abstract class Global {
 
     // fichier contenant les informations sérialisées
     public static final String filename = "save.fic";
-
-    /**
-     * Modification de l'affichage de la date (juste le mois et l'année, sans le jour)
-     */
-    public static void changeAfficheDate(DatePicker datePicker, boolean afficheJours) {
-        try {
-            Field f[] = datePicker.getClass().getDeclaredFields();
-            for (Field field : f) {
-                int daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android");
-                datePicker.init(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), null);
-                if (daySpinnerId != 0)
-                {
-                    View daySpinner = datePicker.findViewById(daySpinnerId);
-                    if (!afficheJours)
-                    {
-                        daySpinner.setVisibility(View.GONE);
-                    }
-                }
-            }
-        } catch (SecurityException | IllegalArgumentException e) {
-            Log.d("ERROR", e.getMessage());
-        }
-    }
 }
