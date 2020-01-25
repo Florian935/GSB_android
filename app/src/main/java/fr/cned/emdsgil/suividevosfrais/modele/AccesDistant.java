@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -51,7 +50,7 @@ public class AccesDistant implements AsyncResponse {
                     String identifiant = info.getString("id");
                     String passwordBdd = info.getString("mdp");
                     String login = info.getString("login");
-                    controle.setIdentifiant(identifiant);
+                    controle.setIdentifiantVisiteur(identifiant);
                     controle.setPasswordBdd(passwordBdd);
                     controle.setLogin(login);
                     if (controle.coupleLoginPwdCorrect(MainActivity.login, MainActivity.passwordEntre)){
@@ -85,15 +84,20 @@ public class AccesDistant implements AsyncResponse {
                             // récupération des informations
                             JSONArray lesInfos = new JSONArray(message[1]);
                             Hashtable<Integer, FraisHf> lesFraisHF = new Hashtable<>();
+                            int identifiant = 0;
                             for(int k=0 ; k<lesInfos.length() ; k++){
                                 JSONObject info = new JSONObject(lesInfos.get(k).toString());
                                 Integer idFraisHF = info.getInt("id");
                                 Double montant = info.getDouble("montant");
                                 String libelle = info.getString("libelle");
-                                String jour = MesOutils.actualDayOfMonth(new Date());
-                                FraisHf unFraisHF = new FraisHf(montant, libelle, jour);
+                                String jour = (info.getString("date")).substring(8, 10);
+                                FraisHf unFraisHF = new FraisHf(montant, libelle, jour, identifiant);
                                 lesFraisHF.put(idFraisHF, unFraisHF);
+                                // Mémorisation du dernier id frais HF ajouté dans la BDD
+                                controle.setDernierIdFraisHf(identifiant);
+                                identifiant++;
                             }
+
                             // mémorisation des frais hors forfait
                             controle.setLesFraisHorsForfait(lesFraisHF);
                         } catch (JSONException e) {
@@ -116,9 +120,16 @@ public class AccesDistant implements AsyncResponse {
 
                                     // On ajoute dans la liste des frais HF le dernier frais HF
                                     // qui a été ajouté contenant l'id dernierId qui vient d'être retourné
-                                    controle.ajouterUnFraisHf(dernierId, new FraisHf(montant, libelle, jour));
+                                    controle.ajouterUnFraisHf(dernierId, new FraisHf(montant, libelle, jour, controle.getDernierIdFraisHf()+1));
+                                    // Mémorisation du dernier id frais HF ajouté dans la BDD
+                                    controle.setDernierIdFraisHf(controle.getDernierIdFraisHf()+1);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                }
+                            }else{
+                                if(message[0].equals("suppressionFraisHF")){
+                                    // pour vérification, affiche le contenu du retour dans la console
+                                    Log.d("updateFraisForfait", "****************" + message[1]);
                                 }
                             }
                         }

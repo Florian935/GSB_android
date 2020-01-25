@@ -20,7 +20,6 @@ public abstract class Global {
      * Original : Typage explicit =
 	 * public static Hashtable<Integer, FraisMois> listFraisMois = new Hashtable<Integer, FraisMois>();
 	*/
-    public static Controle controle = Controle.getInstance(null);
 
     // fichier contenant les informations sérialisées
     public static final String filename = "save.fic";

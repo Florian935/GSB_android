@@ -16,7 +16,6 @@ import java.util.Hashtable;
 import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisForfait;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
-import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 import fr.cned.emdsgil.suividevosfrais.vue.MenuActivity;
@@ -28,7 +27,8 @@ public final class Controle {
     private static AccesDistant accesDistant;
     public static Context context;
     private static MainActivity mainActivity;
-    private String identifiant;
+    private String identifiantVisiteur;
+    private int dernierIdFraisHf; // dernier id frais HF ajouté dans la BDD
     private String passwordBdd;
     private String login;
     private ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
@@ -55,13 +55,17 @@ public final class Controle {
         return Controle.instance;
     }
 
-    public void setIdentifiant(String id){
-        identifiant = id;
+    public void setIdentifiantVisiteur(String id){
+        identifiantVisiteur = id;
     }
 
-    public String getIdentifiant(){
-        return identifiant;
+    public String getIdentifiantVisiteur(){
+        return identifiantVisiteur;
     }
+
+    public int getDernierIdFraisHf() { return dernierIdFraisHf; }
+
+    public void setDernierIdFraisHf(int dernierIdFraisHf) { this.dernierIdFraisHf = dernierIdFraisHf; }
 
     public void setPasswordBdd(String pwd){
         passwordBdd = pwd;
@@ -92,7 +96,7 @@ public final class Controle {
         // On crypte le mot de passe passé en paramètre
         String passCrypte = MesOutils.hashString(password);
 
-        // Si le couple identifiant/mdp crypté correspond au couple identifiant/mdp crypté dans la
+        // Si le couple identifiantVisiteur/mdp crypté correspond au couple identifiantVisiteur/mdp crypté dans la
         // bdd, on retourne true
         if (login.equals(this.login) && passCrypte.equals(this.passwordBdd)) {
             return true;
@@ -147,6 +151,14 @@ public final class Controle {
      */
     public Integer getUnFraisForfait(String key){
         return this.lesFraisForfait.get(key);
+    }
+
+    /**
+     * Supprime le frais HF passé dont l'id correspond à celui passé paramètre
+     * @param id du frais HF à supprimer
+     */
+    public void supprFraisHF(Integer id){
+        this.lesFraisHF.remove(id);
     }
 
     /**

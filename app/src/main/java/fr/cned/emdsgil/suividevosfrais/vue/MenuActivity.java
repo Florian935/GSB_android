@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -125,7 +124,7 @@ public class MenuActivity extends AppCompatActivity {
      */
     public JSONArray convertToJSONArray(){
         List list = new ArrayList();
-        list.add(controle.getIdentifiant());
+        list.add(controle.getIdentifiantVisiteur());
         // Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
         String idMois = MesOutils.actualYear(new Date()) + MesOutils.actualMoisInNumeric(new Date());
         list.add(idMois);

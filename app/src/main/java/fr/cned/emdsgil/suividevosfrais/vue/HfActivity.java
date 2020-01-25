@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 
@@ -31,7 +32,9 @@ public class HfActivity extends AppCompatActivity {
 	private String libelle;
 	private Double montant;
 	private String jour;
-	private FraisHf unFraisHF; // Frais ajouté
+	private String moisMM; // mois au format MM
+	private String moisMMM; // mois au format MMM
+	private String annee; // annee au format aaaa
 	private Controle controle; // Contient l'unique instance du contrôleur
 
 	@Override
@@ -40,15 +43,20 @@ public class HfActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hf);
         setTitle("GSB : Frais HF");
+		this.moisMMM = MesOutils.actualMonth(new Date());
+		this.moisMM = MesOutils.actualMoisInNumeric(new Date());
+		this.annee = MesOutils.actualYear(new Date());
 		// Récupération du contrôleur
 		this.controle = Controle.getInstance(null);
         // modification de l'affichage du DatePicker
         controle.changeAfficheDate((DatePicker) findViewById(R.id.datHf), true, false, false) ;
 		// mise à 0 du montant
-		((EditText)findViewById(R.id.txtHf)).setText("0") ;
+		((EditText)findViewById(R.id.txtHf)).setText("0");
+		// Affichage de la date actuelle
+		((TextView)findViewById(R.id.txtDateHf)).setText(moisMMM + " " + annee);
         // chargement des méthodes événementielles
-		imgReturn_clic() ;
-		cmdAjouter_clic() ;
+		imgReturn_clic();
+		cmdAjouter_clic();
 	}
 
 	@Override
@@ -103,7 +111,6 @@ public class HfActivity extends AppCompatActivity {
 		// Conversion au format double du montant saisi
 		String montantSaisie = ((EditText)findViewById(R.id.txtHf)).getText().toString();
 		this.montant = Double.valueOf(montantSaisie);
-		this.unFraisHF = new FraisHf(this.montant, this.libelle, this.jour);
 	}
 
 	/**
@@ -121,14 +128,12 @@ public class HfActivity extends AppCompatActivity {
 	 */
 	public JSONArray convertToJSONArray(){
 		List list = new ArrayList();
-		String annee = MesOutils.actualYear(new Date());
-		String mois = MesOutils.actualMoisInNumeric(new Date());
 		// Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des
 		// frais dans la BDD (format: aaaamm)
-		String idMois = annee + mois;
+		String idMois = annee + moisMM;
 		// Création de la valeur date à ajouter dans la colonne date (format: aaaa-mm-jj)
-		String date = annee + "-" + mois + "-" + this.jour;
-		list.add(controle.getIdentifiant());
+		String date = annee + "-" + moisMM + "-" + this.jour;
+		list.add(controle.getIdentifiantVisiteur());
 		list.add(idMois);
 		list.add(this.libelle);
 		list.add(date);

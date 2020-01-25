@@ -18,7 +18,7 @@ public class FraisMois implements Serializable {
     private Integer repas; // nombre de repas du mois
     private final ArrayList<FraisHf> lesFraisHf; // liste des frais hors forfait du mois
     private static Controle controle = Controle.getInstance(null);
-    public static String identifiant = controle.getIdentifiant();
+    public static String identifiant = controle.getIdentifiantVisiteur();
 
     public FraisMois(Integer annee, Integer mois) {
         this.annee = annee;
@@ -41,7 +41,7 @@ public class FraisMois implements Serializable {
      * @param motif Justification du frais hors forfait
      */
     public void addFraisHf(Double montant, String motif, String jour) {
-        lesFraisHf.add(new FraisHf(montant, motif, jour));
+        lesFraisHf.add(new FraisHf(montant, motif, jour, 0));
     }
 
     /**

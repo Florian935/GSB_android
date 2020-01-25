@@ -3,15 +3,12 @@ package fr.cned.emdsgil.suividevosfrais.vue;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -158,7 +155,7 @@ public class KmActivity extends AppCompatActivity {
 		List list = new ArrayList();
 		// Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
 		String idMois = annee + moisMM;
-		list.add(controle.getIdentifiant());
+		list.add(controle.getIdentifiantVisiteur());
 		list.add(idMois);
 		list.add(idFrais);
 		list.add(qte);

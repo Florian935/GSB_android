@@ -31,7 +31,7 @@ public class EtapeActivity extends AppCompatActivity {
     private String annee; // annee au format aaaa
     private Integer qte;
     private TextView txtDateEtapes;
-    private Controle controle;
+    private Controle controle; // Contient l'unique instance du contrôleur
     private final String idFrais = "ETP";
 
     @Override
@@ -43,7 +43,8 @@ public class EtapeActivity extends AppCompatActivity {
         this.moisMMM = MesOutils.actualMonth(new Date());
         this.moisMM = MesOutils.actualMoisInNumeric(new Date());
         this.annee = MesOutils.actualYear(new Date());
-        controle = Controle.getInstance(null);
+        // Récupération du contrôleur
+        this.controle = Controle.getInstance(null);
         // valorisation des propriétés
         valoriseProprietes();
         // chargement des méthodes événementielles
@@ -153,7 +154,7 @@ public class EtapeActivity extends AppCompatActivity {
         List list = new ArrayList();
         // Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
         String idMois = annee + moisMM;
-        list.add(controle.getIdentifiant());
+        list.add(controle.getIdentifiantVisiteur());
         list.add(idMois);
         list.add(idFrais);
         list.add(qte);

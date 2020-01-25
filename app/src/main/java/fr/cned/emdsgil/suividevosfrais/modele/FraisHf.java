@@ -10,11 +10,13 @@ public class FraisHf {
 	private final Double montant;
 	private final String libelle;
 	private final String jour;
+	private final int identifiant; // identifiant incrémenté de 1 à chaque frais HF ajoutés dans l'appli
 	
-	public FraisHf(Double montant, String libelle, String jour) {
+	public FraisHf(Double montant, String libelle, String jour, int identifiant) {
 		this.montant = montant ;
 		this.libelle = libelle ;
 		this.jour = jour ;
+		this.identifiant = identifiant;
 	}
 
 	public double getMontant() {
@@ -29,4 +31,5 @@ public class FraisHf {
 		return jour;
 	}
 
+	public int getIdentifiant() { return identifiant; }
 }

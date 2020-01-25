@@ -153,7 +153,7 @@ public class RepasActivity extends AppCompatActivity {
         List list = new ArrayList();
         // Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
         String idMois = annee + moisMM;
-        list.add(controle.getIdentifiant());
+        list.add(controle.getIdentifiantVisiteur());
         list.add(idMois);
         list.add(idFrais);
         list.add(qte);

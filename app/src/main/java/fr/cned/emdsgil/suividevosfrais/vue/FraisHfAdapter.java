@@ -8,28 +8,33 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
-import fr.cned.emdsgil.suividevosfrais.modele.Global;
 import fr.cned.emdsgil.suividevosfrais.R;
 
 public class FraisHfAdapter extends BaseAdapter {
 
-	private final ArrayList<FraisHf> lesFrais; // liste des frais du mois
+	private final Hashtable<Integer, FraisHf> lesFraisHF; // liste des frais hors forfait du mois
 	private final LayoutInflater inflater;
-	private Integer key;
+	private Controle controle; // Contient l'unique instance du contrôleur
 
     /**
 	 * Constructeur de l'adapter pour valoriser les propriétés
      * @param context Accès au contexte de l'application
-     * @param lesFrais Liste des frais hors forfait
+     * @param lesFraisHF Liste des frais hors forfait
      */
-	public FraisHfAdapter(Context context, ArrayList<FraisHf> lesFrais, Integer key) {
+	public FraisHfAdapter(Context context, Hashtable<Integer, FraisHf> lesFraisHF) {
 		inflater = LayoutInflater.from(context);
-		this.lesFrais = lesFrais;
-		this.key = key;
+		this.lesFraisHF = lesFraisHF;
+		// Récupération du contrôleur
+		this.controle = Controle.getInstance(null);
     }
 	
 	/**
@@ -37,7 +42,7 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return lesFrais.size();
+		return lesFraisHF.size();
 	}
 
 	/**
@@ -45,7 +50,7 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public Object getItem(int index) {
-		return lesFrais.get(index);
+		return lesFraisHF.get(index);
 	}
 
 	/**
@@ -61,9 +66,10 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public View getView(int index, View convertView, ViewGroup parent) {
+		final Integer idFraisHF = getIdFraisHF(index);
 		ViewHolder holder;
 		if (convertView == null) {
-			holder = new ViewHolder() ;
+			holder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.layout_liste, parent, false);
 			holder.txtListJour = convertView.findViewById(R.id.txtListJour);
 			holder.txtListMontant = convertView.findViewById(R.id.txtListMontant);
@@ -73,23 +79,50 @@ public class FraisHfAdapter extends BaseAdapter {
 		}else{
 			holder = (ViewHolder)convertView.getTag();
 		}
-		holder.txtListJour.setText(String.format(Locale.FRANCE, "%d", lesFrais.get(index).getJour()));
-		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFrais.get(index).getMontant()));
-		holder.txtListMotif.setText(lesFrais.get(index).getLibelle());
-		holder.cmdSuppHf.setTag(index);
+		holder.txtListJour.setText(lesFraisHF.get(idFraisHF).getJour());
+		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFraisHF.get(idFraisHF).getMontant()));
+		holder.txtListMotif.setText(lesFraisHF.get(idFraisHF).getLibelle());
+		holder.cmdSuppHf.setTag(idFraisHF);
 		// gestion de l'événement clic sur le bouton de suppression
 		holder.cmdSuppHf.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				int indice = (int)v.getTag();
-				// TODO: suppression dans la BDD distante
-				// Suppression du frais HF sur lequel on clic
-				Global.listFraisMois.get(key).supprFraisHf(indice);
+				// Suppression du frais HF sur lequel on clic dans la BDD et dans la liste
+				controle.accesDonnees("suppressionFraisHF", convertToJSONArray(idFraisHF));
+				controle.supprFraisHF(idFraisHF);
 				// Rafraichi la liste visuelle
 				notifyDataSetChanged();
 			}
 		});
 		return convertView;
+	}
+
+	/**
+	 * Retourne l'identifiant du frais HF stocké dans la BDD en fonction de l'identifiant du frais HF
+	 * implémenté dans la BDD
+	 * @param identifiant fourni pour retrouver le frais HF correspondant
+	 * @return l'id du frais HF correspondant dans la BDD
+	 */
+	public Integer getIdFraisHF(int identifiant){
+		for (Hashtable.Entry<?, ?> entry : this.lesFraisHF.entrySet()) {
+			int idFraisHF = this.lesFraisHF.get(entry.getKey()).getIdentifiant();
+			if (identifiant == (idFraisHF)){
+				return (Integer)entry.getKey();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Conversion de l'id du frais hors forfait format JSONArray
+	 * @return l'identifiant au format JSONArray
+	 */
+	public JSONArray convertToJSONArray(Integer idFrais){
+		List list = new ArrayList();
+		list.add(idFrais);
+
+		return new JSONArray(list);
 	}
 
 	/**
