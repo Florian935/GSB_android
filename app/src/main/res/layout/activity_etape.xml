@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.cned.emdsgil.suividevosfrais.EtapeActivity">
+    tools:context="fr.cned.emdsgil.suividevosfrais.vue.EtapeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,14 +65,16 @@
             android:layout_weight="0.4"
             android:orientation="vertical">
 
-            <DatePicker
-                android:id="@+id/datEtape"
+            <TextView
+                android:id="@+id/txtDateEtapes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner" />
-
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:lines="1"
+                android:paddingLeft="80dp"
+                android:paddingRight="80dp"
+                android:textColor="@color/colorPrimaryDark" />
         </LinearLayout>
 
         <LinearLayout
@@ -96,7 +98,7 @@
                     android:layout_gravity="center"
                     android:width="100dp"
                     android:gravity="center_vertical|end"
-                    android:text="TextView"
+                    android:text="0"
                     android:textColor="#000000"
                     android:textSize="24sp"
                     android:textStyle="bold" />

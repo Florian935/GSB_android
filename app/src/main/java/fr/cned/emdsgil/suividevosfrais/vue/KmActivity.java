@@ -1,37 +1,50 @@
-package fr.cned.emdsgil.suividevosfrais;
+package fr.cned.emdsgil.suividevosfrais.vue;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
+import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 
 public class KmActivity extends AppCompatActivity {
 
 	// informations affichées dans l'activité
-	private Integer annee;
-	private Integer mois;
+	private String moisMMM; // mois au format MMM
+	private String moisMM; // mois au format MM
+	private String annee; // annee au format aaaa
 	private Integer qte;
+	private TextView txtDateKm;
+	private Controle controle; // Contient l'unique instance du contrôleur
+	private final String idFrais = "KM"; // id des frais de km
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_km);
         setTitle("GSB : Frais Km");
-		// modification de l'affichage du DatePicker
-		Global.changeAfficheDate((DatePicker) findViewById(R.id.datKm), false);
+        this.txtDateKm = findViewById(R.id.txtDateKm);
+		this.moisMMM = MesOutils.actualMonth(new Date());
+		this.moisMM = MesOutils.actualMoisInNumeric(new Date());
+		this.annee = MesOutils.actualYear(new Date());
+		// Récupération du contrôleur
+		this.controle = Controle.getInstance(null);
 		// valorisation des propriétés
 		valoriseProprietes();
         // chargement des méthodes événementielles
@@ -39,7 +52,6 @@ public class KmActivity extends AppCompatActivity {
 		cmdValider_clic();
 		cmdPlus_clic();
 		cmdMoins_clic();
-		dat_clic();
 	}
 
 	@Override
@@ -63,14 +75,11 @@ public class KmActivity extends AppCompatActivity {
 	 * Valorisation des propriétés avec les informations affichées
 	 */
 	private void valoriseProprietes() {
-		annee = ((DatePicker)findViewById(R.id.datKm)).getYear();
-		mois = ((DatePicker)findViewById(R.id.datKm)).getMonth() + 1;
-		// récupération de la qte correspondant au mois actuel
-		qte = 0;
-		Integer key = annee*100+mois;
-		if (Global.listFraisMois.containsKey(key)) {
-			qte = Global.listFraisMois.get(key).getKm();
-		}
+		// Affichage de la date actuelle
+		String date = moisMMM + " " + annee;
+		this.txtDateKm.setText(date);
+		// récupération de la quantité pour ce frais
+		qte = controle.getUnFraisForfait(idFrais);
 		((TextView)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte));
 	}
 	
@@ -82,23 +91,23 @@ public class KmActivity extends AppCompatActivity {
     		public void onClick(View v) {
     			retourActivityPrincipale() ;    		
     		}
-    	}) ;
+    	});
     }
 
     /**
-     * Sur le clic du bouton valider : sérialisation
+     * Sur le clic du bouton valider : enregistrement du frais forfait dans la BDD
      */
     private void cmdValider_clic() {
     	findViewById(R.id.cmdKmValider).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			Serializer.serialize(Global.listFraisMois, KmActivity.this) ;
-    			retourActivityPrincipale() ;    		
+    			controle.accesDonnees("updateFraisForfait", convertToJSONArray());
+    			retourActivityPrincipale();
     		}
     	}) ;    	
     }
     
     /**
-     * Sur le clic du bouton plus : ajout de 10 dans la quantité
+     * Sur le clic du bouton plus : ajout de 1 dans la quantité
      */
     private void cmdPlus_clic() {
     	findViewById(R.id.cmdKmPlus).setOnClickListener(new Button.OnClickListener() {
@@ -110,28 +119,15 @@ public class KmActivity extends AppCompatActivity {
     }
     
     /**
-     * Sur le clic du bouton moins : enlève 10 dans la quantité si c'est possible
+     * Sur le clic du bouton moins : enlève 1 dans la quantité si c'est possible
      */
     private void cmdMoins_clic() {
     	findViewById(R.id.cmdKmMoins).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-   				qte = Math.max(0, qte-1) ; // suppression de 10 si possible
-    			enregNewQte() ;
+   				qte = Math.max(0, qte-1) ; // suppression de 1 si possible
+    			enregNewQte();
      		}
     	}) ;    	
-    }
-    
-    /**
-     * Sur le changement de date : mise à jour de l'affichage de la qte
-     */
-    private void dat_clic() {   	
-    	final DatePicker uneDate = (DatePicker)findViewById(R.id.datKm);
-    	uneDate.init(uneDate.getYear(), uneDate.getMonth(), uneDate.getDayOfMonth(), new OnDateChangedListener(){
-			@Override
-			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				valoriseProprietes();
-			}
-    	});
     }
 
 	/**
@@ -139,22 +135,31 @@ public class KmActivity extends AppCompatActivity {
 	 */
 	private void enregNewQte() {
 		// enregistrement dans la zone de texte
-		((TextView)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte)) ;
-		// enregistrement dans la liste
-		Integer key = annee*100+mois ;
-		if (!Global.listFraisMois.containsKey(key)) {
-			// creation du mois et de l'annee s'ils n'existent pas déjà
-			Global.listFraisMois.put(key, new FraisMois(annee, mois)) ;
-		}
-		Global.listFraisMois.get(key).setKm(qte);
+		((TextView)findViewById(R.id.txtKm)).setText(String.format(Locale.FRANCE, "%d", qte));
 	}
 
 	/**
 	 * Retour à l'activité principale (le menu)
 	 */
 	private void retourActivityPrincipale() {
-		Intent intent = new Intent(KmActivity.this, MainActivity.class);
+		Intent intent = new Intent(KmActivity.this, MenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
+	}
+
+	/**
+	 * Conversion de l'identifiant, de la date et de l'id du frais forfait et de la quantité au format JSONArray
+	 * @return l'identifiant, la date sous la forme aaaamm, l'id du frais et la quantité au format JSONArray
+	 */
+	public JSONArray convertToJSONArray(){
+		List list = new ArrayList();
+		// Création de l'identifiant 'mois' nécessaire pour effectuer la requête de récupération des frais dans la BDD
+		String idMois = annee + moisMM;
+		list.add(controle.getIdentifiantVisiteur());
+		list.add(idMois);
+		list.add(idFrais);
+		list.add(qte);
+
+		return new JSONArray(list);
 	}
 }
