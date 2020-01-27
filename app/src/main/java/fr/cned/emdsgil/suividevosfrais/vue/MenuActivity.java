@@ -36,7 +36,6 @@ public class MenuActivity extends AppCompatActivity {
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdNuitee)), NuiteeActivity.class);
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdEtape)), EtapeActivity.class);
         cmdMenu_clic(((ImageButton)findViewById(R.id.cmdRepas)), RepasActivity.class);
-        cmdTransfert_clic();
         // Récupération du contrôleur
         this.controle = Controle.getInstance(null);
         recupFrais();
@@ -69,17 +68,6 @@ public class MenuActivity extends AppCompatActivity {
                 Intent intent = new Intent(MenuActivity.this, classe);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-            }
-        });
-    }
-
-    /**
-     * Cas particulier du bouton pour le transfert d'informations vers le serveur
-     */
-    private void cmdTransfert_clic() {
-        findViewById(R.id.cmdTransfert).setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
             }
         });
     }
