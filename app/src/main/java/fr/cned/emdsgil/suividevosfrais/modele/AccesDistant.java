@@ -6,19 +6,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.Hashtable;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.outils.AccesHTTP;
 import fr.cned.emdsgil.suividevosfrais.outils.AsyncResponse;
-import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 
 public class AccesDistant implements AsyncResponse {
 
     // adresse du serveur
-    private static final String SERVERADDR = "http://192.168.1.31/androidgsb/serveurgsb.php";
+    private static final String SERVERADDR = "http://192.168.1.31/GSB/accesBddAndroid/serveurgsb.php";
 
     // propriétés
     private Controle controle;
@@ -129,7 +127,7 @@ public class AccesDistant implements AsyncResponse {
                             }else{
                                 if(message[0].equals("suppressionFraisHF")){
                                     // pour vérification, affiche le contenu du retour dans la console
-                                    Log.d("updateFraisForfait", "****************" + message[1]);
+                                    Log.d("suppressionFraisHF", "****************" + message[1]);
                                 }
                             }
                         }

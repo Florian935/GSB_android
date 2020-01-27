@@ -17,7 +17,6 @@ import fr.cned.emdsgil.suividevosfrais.modele.AccesDistant;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisForfait;
 import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
-import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 import fr.cned.emdsgil.suividevosfrais.vue.MenuActivity;
 
 public final class Controle {
@@ -26,7 +25,6 @@ public final class Controle {
     private static Controle instance = null;
     private static AccesDistant accesDistant;
     public static Context context;
-    private static MainActivity mainActivity;
     private String identifiantVisiteur;
     private int dernierIdFraisHf; // dernier id frais HF ajouté dans la BDD
     private String passwordBdd;
