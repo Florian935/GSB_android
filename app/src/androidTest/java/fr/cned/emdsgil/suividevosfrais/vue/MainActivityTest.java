@@ -17,21 +17,24 @@ import static org.junit.Assert.*;
 
 public class MainActivityTest {
 
+    // Activity qui sera lancée pour chaque tests
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
     private MainActivity mainActivity = null;
 
+    /**
+     * Méthode appelée avant chaque test
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         mainActivity = mainActivityActivityTestRule.getActivity();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        mainActivity = null;
-    }
-
+    /**
+     * Teste si à la création de l'activity menu, tous les objets graphiques sont bien créés
+     */
     @Test
     public void onCreate() {
         TextView lblLoginAuth = mainActivity.findViewById(R.id.lblLoginAuth);
@@ -50,5 +53,14 @@ public class MainActivityTest {
         assertEquals("Identifiant", lblLoginAuth.getText());
         assertEquals("Mot de passe", lblPasswordAuth.getText());
         assertEquals("Se connecter", cmdSeConnecter.getText());
+    }
+
+    /**
+     * Méthode appelée après chaque test
+     * @throws Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        mainActivity = null;
     }
 }

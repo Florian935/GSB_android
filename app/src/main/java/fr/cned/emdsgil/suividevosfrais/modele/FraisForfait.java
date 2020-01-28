@@ -1,13 +1,11 @@
 package fr.cned.emdsgil.suividevosfrais.modele;
 
-import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 
 /**
  * Classe métier contenant les informations des frais forfait du mois
  */
 public class FraisForfait {
 
-    private static Controle controle = Controle.getInstance(null);
     private String idFraisForfait; // id du frais forfait
     private Integer quantite; // quantité du frais forfait
 
