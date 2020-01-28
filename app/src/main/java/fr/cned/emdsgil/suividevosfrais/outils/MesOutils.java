@@ -67,13 +67,13 @@ public abstract class MesOutils {
     }
 
     /**
-     * Retourne le jour de la date passée en paramètre au format numérique
+     * Retourne le jour du mois de la date passée en paramètre au format numérique
      * @param uneDate au format Date
      * @return le jour actuel du mois sous forme dd au format String
      */
     public static String actualDayOfMonth(Date uneDate){
         String date = convertDateToString(uneDate);
-        return date.substring(9, 11);
+        return date.substring(11, 13);
     }
 
     /**
@@ -107,7 +107,7 @@ public abstract class MesOutils {
     }
 
     /**
-     * Permet de convertir l'entier correspondant au jour du mois au format String sous la forme dd
+     * Permet de convertir un entier correspondant à un jour d'un mois au format String sous la forme dd
      * @param day à convertir
      * @return day converti au format dd (String)
      */
