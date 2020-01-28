@@ -22,19 +22,27 @@ import static org.junit.Assert.*;
 
 public class RepasActivityTest {
 
+    // Activity qui sera lancée pour chaque tests
     @Rule
     public ActivityTestRule<RepasActivity> repasActivityActivityTestRule = new ActivityTestRule<RepasActivity>(RepasActivity.class);
 
     private RepasActivity repasActivity = null;
 
+    // Valorisation du monitor permettant de réaliser la simulation de l'ouverture de l'Activity souhaitée
     Instrumentation.ActivityMonitor monitorMenu = getInstrumentation().addMonitor(MenuActivity.class.getName(), null, false);
 
-
+    /**
+     * Méthode appelée avant chaque test
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         repasActivity = repasActivityActivityTestRule.getActivity();
     }
 
+    /**
+     * Teste si à la création de l'activity menu, tous les objets graphiques sont bien créés
+     */
     @Test
     public void onCreate() {
         ImageView imgRepasReturn = repasActivity.findViewById(R.id.imgRepasReturn);
@@ -52,6 +60,10 @@ public class RepasActivityTest {
         assertEquals("Valider", cmdRepasValider.getText());
     }
 
+    /**
+     * Teste si au clic sur le bouton permettant de retourner à la vue du menu, l'activity
+     * correspondante s'ouvre
+     */
     @Test
     public void testLaunchOfMenuActivityOnButtonClick() {
         assertNotNull(repasActivity.findViewById(R.id.imgRepasReturn));
@@ -63,6 +75,10 @@ public class RepasActivityTest {
         menuActivity.finish();
     }
 
+    /**
+     * Méthode appelée après chaque test
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         repasActivity = null;

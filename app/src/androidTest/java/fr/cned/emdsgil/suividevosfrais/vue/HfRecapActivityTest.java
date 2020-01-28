@@ -23,19 +23,28 @@ import static org.junit.Assert.*;
 
 public class HfRecapActivityTest {
 
+    // Activity qui sera lancée pour chaque tests
     @Rule
     public ActivityTestRule<HfRecapActivity> hfRecapActivityActivityTestRule = new ActivityTestRule<HfRecapActivity>(HfRecapActivity.class);
 
     private HfRecapActivity hfRecapActivity = null;
 
+    // Valorisation du monitor permettant de réaliser la simulation de l'ouverture de l'Activity souhaitée
     Instrumentation.ActivityMonitor monitorMenu = getInstrumentation().addMonitor(MenuActivity.class.getName(), null, false);
 
 
+    /**
+     * Méthode appelée avant chaque test
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         hfRecapActivity = hfRecapActivityActivityTestRule.getActivity();
     }
 
+    /**
+     * Teste si à la création de l'activity menu, tous les objets graphiques sont bien créés
+     */
     @Test
     public void onCreate() {
         ImageView imgHfRecapReturn = hfRecapActivity.findViewById(R.id.imgHfRecapReturn);
@@ -47,6 +56,10 @@ public class HfRecapActivityTest {
         assertNotNull(lstHfRecap);
     }
 
+    /**
+     * Teste si au clic sur le bouton permettant de retourner à la vue du menu, l'activity
+     * correspondante s'ouvre
+     */
     @Test
     public void testLaunchOfMenuActivityOnButtonClick() {
         assertNotNull(hfRecapActivity.findViewById(R.id.imgHfRecapReturn));
@@ -58,6 +71,10 @@ public class HfRecapActivityTest {
         menuActivity.finish();
     }
 
+    /**
+     * Méthode appelée après chaque test
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         hfRecapActivity = null;

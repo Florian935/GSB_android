@@ -22,18 +22,27 @@ import static org.junit.Assert.*;
 
 public class EtapeActivityTest {
 
+    // Activity qui sera lancée pour chaque tests
     @Rule
     public ActivityTestRule<EtapeActivity> etapeActivityActivityTestRule = new ActivityTestRule<EtapeActivity>(EtapeActivity.class);
 
     private EtapeActivity etapeActivity = null;
 
+    // Valorisation du monitor permettant de réaliser la simulation de l'ouverture de l'Activity souhaitée
     Instrumentation.ActivityMonitor monitorMenu = getInstrumentation().addMonitor(MenuActivity.class.getName(), null, false);
 
+    /**
+     * Méthode appelée avant chaque test
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         etapeActivity = etapeActivityActivityTestRule.getActivity();
     }
 
+    /**
+     * Teste si à la création de l'activity menu, tous les objets graphiques sont bien créés
+     */
     @Test
     public void onCreate() {
         ImageView imgEtapeReturn = etapeActivity.findViewById(R.id.imgEtapeReturn);
@@ -51,6 +60,10 @@ public class EtapeActivityTest {
         assertEquals("Valider", cmdEtapeValider.getText());
     }
 
+    /**
+     * Teste si au clic sur le bouton permettant de retourner à la vue du menu, l'activity
+     * correspondante s'ouvre
+     */
     @Test
     public void testLaunchOfMenuActivityOnButtonClick() {
         assertNotNull(etapeActivity.findViewById(R.id.imgEtapeReturn));
@@ -63,6 +76,10 @@ public class EtapeActivityTest {
         menuActivity.finish();
     }
 
+    /**
+     * Méthode appelée après chaque test
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         etapeActivity = null;
