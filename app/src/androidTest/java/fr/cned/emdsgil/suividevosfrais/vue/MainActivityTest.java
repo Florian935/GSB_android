@@ -41,18 +41,14 @@ public class MainActivityTest {
         EditText txtPwdAuth = mainActivity.findViewById(R.id.txtPwdAuth);
         Button cmdSeConnecter = mainActivity.findViewById(R.id.cmdSeConnecter);
 
-        assertNotNull(lblLoginAuth.getText());
-        assertNotNull(lblPasswordAuth.getText());
-        assertNotNull(txtErrorAuth.getText());
+        assertNotNull(lblLoginAuth);
+        assertNotNull(lblPasswordAuth);
+        assertNotNull(txtErrorAuth);
         assertNotNull(txtLoginAuth);
         assertNotNull(txtPwdAuth);
         assertNotNull(cmdSeConnecter);
         assertEquals("Identifiant", lblLoginAuth.getText());
         assertEquals("Mot de passe", lblPasswordAuth.getText());
         assertEquals("Se connecter", cmdSeConnecter.getText());
-    }
-
-    @Test
-    public void convertToJSONArray() {
     }
 }

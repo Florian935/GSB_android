@@ -2,6 +2,7 @@ package fr.cned.emdsgil.suividevosfrais.vue;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.widget.ImageButton;
 
 import androidx.test.rule.ActivityTestRule;
 
@@ -17,6 +18,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MenuActivityTest {
 
@@ -109,12 +111,25 @@ public class MenuActivityTest {
         hfRecapActivity.finish();
     }
 
+    @Test
+    public void onCreate() {
+        ImageButton cmdKm = menuActivity.findViewById(R.id.cmdKm);
+        ImageButton cmdRepas = menuActivity.findViewById(R.id.cmdRepas);
+        ImageButton cmdNuitee = menuActivity.findViewById(R.id.cmdNuitee);
+        ImageButton cmdEtape = menuActivity.findViewById(R.id.cmdEtape);
+        ImageButton cmdHf = menuActivity.findViewById(R.id.cmdHf);
+        ImageButton cmdHfRecap = menuActivity.findViewById(R.id.cmdHfRecap);
+
+        assertNotNull(cmdKm);
+        assertNotNull(cmdRepas);
+        assertNotNull(cmdNuitee);
+        assertNotNull(cmdEtape);
+        assertNotNull(cmdHf);
+        assertNotNull(cmdHfRecap);
+    }
+
     @After
     public void tearDown() throws Exception {
         menuActivity = null;
-    }
-
-    @Test
-    public void onCreate() {
     }
 }
