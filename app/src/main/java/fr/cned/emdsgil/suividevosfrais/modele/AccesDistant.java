@@ -16,7 +16,7 @@ import fr.cned.emdsgil.suividevosfrais.vue.MainActivity;
 public class AccesDistant implements AsyncResponse {
 
     // adresse du serveur
-    private static final String SERVERADDR = "http://192.168.1.31/GSB/accesBddAndroid/serveurgsb.php";
+    private static final String SERVERADDR = "https://gsb-gestion-frais.000webhostapp.com/accesBddAndroid/serveurgsb.php";
 
     // propriétés
     private Controle controle;
