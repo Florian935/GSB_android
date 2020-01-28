@@ -2,19 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentEnd="true"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentBottom="true"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context=".vue.MenuActivity"
-    tools:menu="@menu/main_menu">
+    tools:menu="@menu/main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="0.33333334"
         android:baselineAligned="false">
 
         <LinearLayout
@@ -30,9 +30,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:contentDescription="@string/icone_frais_km"
                 android:scaleType="fitCenter"
-                android:src="@drawable/frais_km"
-                android:contentDescription="@string/icone_frais_km"/>
+                android:src="@drawable/frais_km" />
 
         </LinearLayout>
 
@@ -49,9 +49,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:contentDescription="@string/icone_frais_repas"
                 android:scaleType="fitCenter"
-                android:src="@drawable/frais_repas"
-                android:contentDescription="@string/icone_frais_repas" />
+                android:src="@drawable/frais_repas" />
 
         </LinearLayout>
     </LinearLayout>
@@ -59,7 +59,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="0.33333334"
         android:baselineAligned="false">
 
         <LinearLayout
@@ -75,9 +75,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:contentDescription="@string/icone_frais_nuitee"
                 android:scaleType="fitCenter"
-                android:src="@drawable/frais_nuitee"
-                android:contentDescription="@string/icone_frais_nuitee"/>
+                android:src="@drawable/frais_nuitee" />
 
         </LinearLayout>
 
@@ -94,9 +94,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:contentDescription="@string/icone_frais_etape"
                 android:scaleType="fitCenter"
-                android:src="@drawable/frais_etape"
-                android:contentDescription="@string/icone_frais_etape"/>
+                android:src="@drawable/frais_etape" />
 
         </LinearLayout>
     </LinearLayout>
@@ -104,7 +104,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="0.33333334"
         android:baselineAligned="false">
 
         <LinearLayout
@@ -120,9 +120,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:contentDescription="@string/icone_frais_hf"
                 android:scaleType="fitCenter"
-                android:src="@drawable/frais_hf"
-                android:contentDescription="@string/icone_frais_hf"/>
+                android:src="@drawable/frais_hf" />
 
         </LinearLayout>
 
@@ -139,19 +139,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:contentDescription="@string/icone_recap_hf"
                 android:scaleType="fitCenter"
-                android:src="@drawable/frais_hf_recap"
-                android:contentDescription="@string/icone_recap_hf" />
+                android:src="@drawable/frais_hf_recap" />
 
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.25"
-        android:orientation="horizontal"
-        android:baselineAligned="false"/>
 
 </LinearLayout>
 
