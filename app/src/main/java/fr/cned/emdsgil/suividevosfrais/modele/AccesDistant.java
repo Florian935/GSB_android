@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
@@ -81,7 +82,7 @@ public class AccesDistant implements AsyncResponse {
                         try {
                             // récupération des informations
                             JSONArray lesInfos = new JSONArray(message[1]);
-                            Hashtable<Integer, FraisHf> lesFraisHF = new Hashtable<>();
+                            ArrayList<FraisHf> lesFraisHf = new ArrayList<>();
                             int identifiant = 0;
                             for(int k=0 ; k<lesInfos.length() ; k++){
                                 JSONObject info = new JSONObject(lesInfos.get(k).toString());
@@ -90,14 +91,14 @@ public class AccesDistant implements AsyncResponse {
                                 String libelle = info.getString("libelle");
                                 String jour = (info.getString("date")).substring(8, 10);
                                 FraisHf unFraisHF = new FraisHf(montant, libelle, jour, identifiant, idFraisHF);
-                                lesFraisHF.put(idFraisHF, unFraisHF);
+                                lesFraisHf.add(unFraisHF);
                                 // Mémorisation du dernier id frais HF ajouté dans la BDD
                                 controle.setDernierIdFraisHf(identifiant);
                                 identifiant++;
                             }
 
                             // mémorisation des frais hors forfait
-                            controle.setLesFraisHorsForfait(lesFraisHF);
+                            controle.setLesFraisHorsForfait(lesFraisHf);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

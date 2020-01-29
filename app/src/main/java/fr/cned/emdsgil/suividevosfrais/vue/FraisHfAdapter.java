@@ -12,8 +12,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,9 +21,10 @@ import fr.cned.emdsgil.suividevosfrais.R;
 
 public class FraisHfAdapter extends BaseAdapter {
 
-	private ArrayList<FraisHf> lesFraisHfInArray; // liste des frais hors forfait du mois
+	private ArrayList<FraisHf> lesFraisHf; // liste des frais hors forfait du mois
 	private final LayoutInflater inflater;
 	private Controle controle; // Contient l'unique instance du contrôleur
+	private int indiceSupprime = 0;
 
     /**
 	 * Constructeur de l'adapter pour valoriser les propriétés
@@ -34,8 +33,7 @@ public class FraisHfAdapter extends BaseAdapter {
      */
 	public FraisHfAdapter(Context context, ArrayList<FraisHf> lesFraisHF) {
 		inflater = LayoutInflater.from(context);
-		this.lesFraisHfInArray = lesFraisHF;
-		Collections.sort(lesFraisHfInArray, Collections.<FraisHf>reverseOrder());
+		this.lesFraisHf = lesFraisHF;
 		// Récupération du contrôleur
 		this.controle = Controle.getInstance(null);
     }
@@ -45,7 +43,7 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return lesFraisHfInArray.size();
+		return lesFraisHf.size();
 	}
 
 	/**
@@ -53,7 +51,7 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public Object getItem(int index) {
-		return lesFraisHfInArray.get(index);
+		return lesFraisHf.get(index);
 	}
 
 	/**
@@ -69,7 +67,8 @@ public class FraisHfAdapter extends BaseAdapter {
 	 */
 	@Override
 	public View getView(int index, View convertView, ViewGroup parent) {
-		final Integer idFraisHF = getIdFraisHFArray(index);
+		final FraisHf FraisHfActuel = (FraisHf)this.getItem(index);
+		final Integer idFraisHF = FraisHfActuel.getIdFraisDansBdd();
 		ViewHolder holder;
 
 		if (convertView == null) {
@@ -83,9 +82,9 @@ public class FraisHfAdapter extends BaseAdapter {
 		}else{
 			holder = (ViewHolder)convertView.getTag();
 		}
-		holder.txtListJour.setText(lesFraisHfInArray.get(index).getJour());
-		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFraisHfInArray.get(index).getMontant()));
-		holder.txtListMotif.setText(lesFraisHfInArray.get(index).getLibelle());
+		holder.txtListJour.setText(lesFraisHf.get(index).getJour());
+		holder.txtListMontant.setText(String.format(Locale.FRANCE, "%.2f", lesFraisHf.get(index).getMontant()));
+		holder.txtListMotif.setText(lesFraisHf.get(index).getLibelle());
 		holder.cmdSuppHf.setTag(index);
 		// gestion de l'événement clic sur le bouton de suppression
 		holder.cmdSuppHf.setOnClickListener(new View.OnClickListener(){
@@ -93,26 +92,12 @@ public class FraisHfAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				int indice = (int)v.getTag();
 				// Suppression du frais HF sur lequel on clic dans la BDD et dans la liste
-				controle.supprFraisHF("suppressionFraisHF", convertToJSONArray(idFraisHF), lesFraisHfInArray.get(indice));
+				controle.supprFraisHF("suppressionFraisHF", convertToJSONArray(idFraisHF), FraisHfActuel);
 				// Rafraichi la liste visuelle
 				notifyDataSetChanged();
 			}
 		});
 		return convertView;
-	}
-
-	/**
-	 * Retourne l'identifiant du frais HF stocké dans la BDD en fonction de la position dans le listAdapter
-	 * @param identifiant fourni pour retrouver le frais HF correspondant
-	 * @return l'id du frais HF correspondant dans la BDD
-	 */
-	public Integer getIdFraisHFArray(int identifiant){
-		for (int k = 0; k < lesFraisHfInArray.size(); k++) {
-			if (lesFraisHfInArray.get(k).getIdentifiant() == identifiant) {
-				return lesFraisHfInArray.get(k).getIdFraisDansBdd();
-			}
-		}
-		return null;
 	}
 
 	/**
