@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 
 import org.json.JSONArray;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -30,6 +31,7 @@ public final class Controle {
     private String passwordBdd;
     private String login;
     private ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
+    private ArrayList<FraisHf> lesFraisHFInArray = new ArrayList<FraisHf>();
     private Hashtable<String, Integer> lesFraisForfait = new Hashtable<>();
     private Hashtable<Integer, FraisHf> lesFraisHF = new Hashtable<>();
 
@@ -152,11 +154,30 @@ public final class Controle {
     }
 
     /**
-     * Supprime le frais HF passé dont l'id correspond à celui passé paramètre
-     * @param id du frais HF à supprimer
+     * Supprime le frais HF passé en paramètre et le frais HF correspondant dans la BDD
+     * @param operation
+     * @param lesInfos
+     * @param fraisHf
      */
-    public void supprFraisHF(Integer id){
-        this.lesFraisHF.remove(id);
+    public void supprFraisHF(String operation, JSONArray lesInfos, FraisHf fraisHf){
+        accesDistant.envoi(operation, lesInfos);
+        this.lesFraisHFInArray.remove(fraisHf);
+    }
+
+    /**
+     * Conversion d'un hashtable en un arraylist
+     * @param lesFraisHf hashtable à convertir
+     * @return l'arraylist converti
+     */
+    public ArrayList<FraisHf> convertHashtableToArrayList(Hashtable <Integer, FraisHf> lesFraisHf) {
+        ArrayList<FraisHf> lesFraisHfArray = new ArrayList<>();
+        for (Hashtable.Entry<?, ?> entry : lesFraisHf.entrySet()) {
+            FraisHf unFraisHf = lesFraisHf.get(entry.getKey());
+            unFraisHf.idFraisDansBdd = lesFraisHf.get(entry.getKey()).getIdFraisDansBdd();
+            lesFraisHfArray.add(unFraisHf);
+        }
+        this.lesFraisHFInArray = lesFraisHfArray;
+        return lesFraisHfArray;
     }
 
     /**
