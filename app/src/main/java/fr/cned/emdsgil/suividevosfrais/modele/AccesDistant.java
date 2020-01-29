@@ -89,7 +89,7 @@ public class AccesDistant implements AsyncResponse {
                                 Double montant = info.getDouble("montant");
                                 String libelle = info.getString("libelle");
                                 String jour = (info.getString("date")).substring(8, 10);
-                                FraisHf unFraisHF = new FraisHf(montant, libelle, jour, identifiant);
+                                FraisHf unFraisHF = new FraisHf(montant, libelle, jour, identifiant, idFraisHF);
                                 lesFraisHF.put(idFraisHF, unFraisHF);
                                 // Mémorisation du dernier id frais HF ajouté dans la BDD
                                 controle.setDernierIdFraisHf(identifiant);
@@ -118,7 +118,7 @@ public class AccesDistant implements AsyncResponse {
 
                                     // On ajoute dans la liste des frais HF le dernier frais HF
                                     // qui a été ajouté contenant l'id dernierId qui vient d'être retourné
-                                    controle.ajouterUnFraisHf(dernierId, new FraisHf(montant, libelle, jour, controle.getDernierIdFraisHf()+1));
+                                    controle.ajouterUnFraisHf(dernierId, new FraisHf(montant, libelle, jour, controle.getDernierIdFraisHf()+1, dernierId));
                                     // Mémorisation du dernier id frais HF ajouté dans la BDD
                                     controle.setDernierIdFraisHf(controle.getDernierIdFraisHf()+1);
                                 } catch (JSONException e) {

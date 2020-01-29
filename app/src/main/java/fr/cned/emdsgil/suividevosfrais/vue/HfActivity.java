@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
-import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
 import fr.cned.emdsgil.suividevosfrais.R;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 
@@ -91,13 +90,14 @@ public class HfActivity extends AppCompatActivity {
 	 * et ajout du frais HF dans la BDD
      */
     private void cmdAjouter_clic() {
+    	final String lib = this.libelle;
     	findViewById(R.id.cmdHfAjouter).setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			enregListe();
     			controle.accesDonnees("ajoutFraisHF", convertToJSONArray());
     			retourActivityPrincipale();
     		}
-    	}) ;    	
+    	}) ;
     }
     
 	/**

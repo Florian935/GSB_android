@@ -62,7 +62,7 @@ public class HfRecapActivity extends AppCompatActivity {
 	 */
 	private void afficheListe() {
 		ListView listView = (ListView)findViewById(R.id.lstHfRecap);
-		FraisHfAdapter adapter = new FraisHfAdapter(HfRecapActivity.this, controle.getLesFraisHF());
+		FraisHfAdapter adapter = new FraisHfAdapter(HfRecapActivity.this, controle.convertHashtableToArrayList(controle.getLesFraisHF()));
 		listView.setAdapter(adapter);
 	}
 	
