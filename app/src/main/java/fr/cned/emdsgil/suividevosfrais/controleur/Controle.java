@@ -9,7 +9,6 @@ import android.widget.DatePicker;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -30,11 +29,8 @@ public final class Controle {
     private int dernierIdFraisHf; // dernier id frais HF ajouté dans la BDD
     private String passwordBdd;
     private String login;
-    private ArrayList<FraisForfait> lesFraisForfaits = new ArrayList<FraisForfait>();
-    private ArrayList<FraisHf> lesFraisHFInArray = new ArrayList<FraisHf>();
+    private ArrayList<FraisHf> lesFraisHF = new ArrayList<>();
     private Hashtable<String, Integer> lesFraisForfait = new Hashtable<>();
-    private Hashtable<Integer, FraisHf> lesFraisHF = new Hashtable<>();
-
     /**
      * Constructeur privé
      */
@@ -71,19 +67,13 @@ public final class Controle {
         passwordBdd = pwd;
     }
 
-    public String getPasswordBdd(){
-        return passwordBdd;
-    }
-
     public void setLogin(String log){
         login = log;
     }
 
-    public String getLogin(){
-        return login;
+    public ArrayList<FraisHf> getLesFraisHF() {
+        return lesFraisHF;
     }
-
-    public Hashtable<Integer, FraisHf> getLesFraisHF() { return lesFraisHF; }
 
     /**
      * Vérification du login et du mdp entré par le visiteur lors de l'authentification
@@ -104,6 +94,9 @@ public final class Controle {
         return false;
     }
 
+    /**
+     * Permet de lancer la vue MenuActivity
+     */
     public void accesMenuActivity() {
         Intent intent = new Intent(this.context, MenuActivity.class);
         intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -132,7 +125,7 @@ public final class Controle {
      * Valorise les frais hors forfaits du mois actuel
      * @param lesFraisHF à valoriser
      */
-    public void setLesFraisHorsForfait(Hashtable <Integer, FraisHf> lesFraisHF){
+    public void setLesFraisHorsForfait(ArrayList<FraisHf> lesFraisHF){
         this.lesFraisHF = lesFraisHF;;
     }
 
@@ -141,12 +134,12 @@ public final class Controle {
      * @param unFraisHF a ajouter dans la liste
      */
     public void ajouterUnFraisHf(Integer idFraisHF, FraisHf unFraisHF){
-        this.lesFraisHF.put(idFraisHF, unFraisHF);
+        this.lesFraisHF.add(unFraisHF);
     }
 
     /**
      * Permet de récupérer un frais forfait en fonction de la clé fournie
-     * @param key permettant de savoir clé frais forfait on récupère
+     * @param key permettant de savoir quel frais forfait on récupère
      * @return la quantité du frais forfait souhaité
      */
     public Integer getUnFraisForfait(String key){
@@ -161,23 +154,7 @@ public final class Controle {
      */
     public void supprFraisHF(String operation, JSONArray lesInfos, FraisHf fraisHf){
         accesDistant.envoi(operation, lesInfos);
-        this.lesFraisHFInArray.remove(fraisHf);
-    }
-
-    /**
-     * Conversion d'un hashtable en un arraylist
-     * @param lesFraisHf hashtable à convertir
-     * @return l'arraylist converti
-     */
-    public ArrayList<FraisHf> convertHashtableToArrayList(Hashtable <Integer, FraisHf> lesFraisHf) {
-        ArrayList<FraisHf> lesFraisHfArray = new ArrayList<>();
-        for (Hashtable.Entry<?, ?> entry : lesFraisHf.entrySet()) {
-            FraisHf unFraisHf = lesFraisHf.get(entry.getKey());
-            unFraisHf.idFraisDansBdd = lesFraisHf.get(entry.getKey()).getIdFraisDansBdd();
-            lesFraisHfArray.add(unFraisHf);
-        }
-        this.lesFraisHFInArray = lesFraisHfArray;
-        return lesFraisHfArray;
+        this.lesFraisHF.remove(fraisHf);
     }
 
     /**

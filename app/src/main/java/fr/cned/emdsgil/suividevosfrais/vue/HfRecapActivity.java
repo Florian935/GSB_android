@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.Date;
 
 import fr.cned.emdsgil.suividevosfrais.controleur.Controle;
 import fr.cned.emdsgil.suividevosfrais.R;
+import fr.cned.emdsgil.suividevosfrais.modele.FraisHf;
 import fr.cned.emdsgil.suividevosfrais.outils.MesOutils;
 
 public class HfRecapActivity extends AppCompatActivity {
@@ -62,7 +64,8 @@ public class HfRecapActivity extends AppCompatActivity {
 	 */
 	private void afficheListe() {
 		ListView listView = (ListView)findViewById(R.id.lstHfRecap);
-		FraisHfAdapter adapter = new FraisHfAdapter(HfRecapActivity.this, controle.convertHashtableToArrayList(controle.getLesFraisHF()));
+		Collections.sort(controle.getLesFraisHF(), Collections.<FraisHf>reverseOrder());
+		FraisHfAdapter adapter = new FraisHfAdapter(HfRecapActivity.this, controle.getLesFraisHF());
 		listView.setAdapter(adapter);
 	}
 	
