@@ -8,16 +8,16 @@
     android:layout_alignParentTop="true"
     android:orientation="vertical"
     android:weightSum="1.5"
-    tools:context=".HfRecapActivity">
+    tools:context=".vue.HfRecapActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:weightSum="1"
-        android:baselineAligned="false">
+        android:weightSum="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,24 +59,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:orientation="horizontal">
 
-        <DatePicker
-            android:id="@+id/datHfRecap"
+        <TextView
+            android:id="@+id/txtDateHfRecap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner" />
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:textColor="@color/colorPrimaryDark" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
         android:baselineAligned="false"
         android:padding="5dp">
 
