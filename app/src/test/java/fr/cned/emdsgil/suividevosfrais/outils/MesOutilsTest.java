@@ -1,5 +1,7 @@
 package fr.cned.emdsgil.suividevosfrais.outils;
 
+import android.util.Log;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,7 @@ public class MesOutilsTest {
 
     @Test
     public void actualDayOfMonth() {
-        String jourAttendu = date.substring(11, 13);
+        String jourAttendu = date.substring(11, 12);
         String jourRetourne = MesOutils.actualDayOfMonth(new Date());
 
         assertEquals(jourAttendu, jourRetourne);
