@@ -76,7 +76,7 @@ public final class Controle {
     }
 
     /**
-     * Vérification du login et du mdp entré par le visiteur lors de l'authentification
+     * Vérification du login et du mdp entrés par le visiteur lors de l'authentification
      *
      * @param login login entré par le visiteur
      * @param password mdp entré par le visiteur

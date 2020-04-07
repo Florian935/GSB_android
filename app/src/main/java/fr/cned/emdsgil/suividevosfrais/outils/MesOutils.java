@@ -37,7 +37,7 @@ public abstract class MesOutils {
 
     /**
      * Permet d'effectuer une conversion d'un tableau de bits au format hexadécimale pour finalement
-     * retourné le tableau de bits sous forme de chaîne de caractère String
+     * retourner le tableau de bits sous forme de chaîne de caractère String
      *
      * @param bits conversion au format hexadécimale puis au format String
      * @return les bits passés en paramètre au format String
@@ -73,7 +73,7 @@ public abstract class MesOutils {
      */
     public static String actualDayOfMonth(Date uneDate){
         String date = convertDateToString(uneDate);
-        return date.substring(11, 13);
+        return date.substring(11, 12);
     }
 
     /**

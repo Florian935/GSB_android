@@ -45,7 +45,7 @@ public class AccesHTTP extends AsyncTask<String, Integer, Long> {
 
     /**
      * Méthode appelée par la méthode execute
-     * permet d'envoyer au serveur une liste de paramètres en GET
+     * permet d'envoyer au serveur une liste de paramètres en POST
      * @param urls contient l'adresse du serveur dans la case 0 de urls
      * @return null
      */
